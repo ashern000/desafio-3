@@ -29,16 +29,16 @@ public class ProductValidator extends Validator {
         final var name = this.product.getName();
 
         if(name == null) {
-            this.validationHandler().append(new Error("'name' should be not null"));
+            this.validationHandler().append(new Error("'name' should not be null"));
             return;
         }
         if(name.isBlank()) {
-            this.validationHandler().append(new Error("'name' should be not empty"));
+            this.validationHandler().append(new Error("'name' should not be empty"));
             return;
         }
 
         if(name.trim().isEmpty()) {
-            this.validationHandler().append(new Error("'name' should be not empty"));
+            this.validationHandler().append(new Error("'name' should not be empty"));
             return;
         }
 
@@ -51,17 +51,17 @@ public class ProductValidator extends Validator {
         final String description = this.product.getDescription();
 
         if (description.isEmpty()) {
-            this.validationHandler().append(new Error("'description' should be not empty"));
+            this.validationHandler().append(new Error("'description' should not be empty"));
             return;
         }
 
         if (description.isBlank()) {
-            this.validationHandler().append(new Error("'description' should be not null"));
+            this.validationHandler().append(new Error("'description' should not be null"));
             return;
         }
 
         if (description.trim().length() < MIN_LENGTH_PROD_DESCRIPTION || description.trim().length() > MAX_LENGTH_PROD_DESCRIPTION) {
-            this.validationHandler().append(new Error("'description' must be between 1 and 1250 characters"));
+            this.validationHandler().append(new Error("'description' must between 1 and 1250 characters"));
         }
     }
 }

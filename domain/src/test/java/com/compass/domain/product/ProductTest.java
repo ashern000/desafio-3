@@ -11,16 +11,17 @@ public class ProductTest {
     public void givenAValidProduct_whenCallNewProduct() {
 
         final var expectedName = "Café";
-        final var expectedQuantity = 10;
         final var expectedDescription = "Café para reuniões";
+        final var expectedActive = true;
 
-        final Product product = Product.newProduct(expectedName, expectedDescription, expectedQuantity);
+        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive);
 
 
         Assertions.assertNotNull(product);
         Assertions.assertEquals(expectedName, product.getName());
-        Assertions.assertEquals(expectedQuantity, product.getQuantity());
         Assertions.assertEquals(expectedDescription, product.getDescription());
+        Assertions.assertEquals(expectedActive, product.isActive());
+        Assertions.assertTrue(product.isActive());
         Assertions.assertNotNull(product.getCreatedAt());
         Assertions.assertNotNull(product.getUpdatedAt());
         Assertions.assertNull(product.getDeletedAt());
@@ -30,12 +31,12 @@ public class ProductTest {
     @Test
     public void givenAnInvalidNullName_whenCallNewProduct_thenShouldReceiveError() {
         final String expectedName = null;
-        final var expectedQuantity = 10;
         final var expectedDescription = "Café para reuniões";
-        final var expectedErrorMessage = "'name' should be not null";
+        final var expectedActive = true;
+        final var expectedErrorMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final Product product = Product.newProduct(expectedName, expectedDescription, expectedQuantity);
+        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive);
 
         final var actualException = Assertions.assertThrows(DomainException.class, ()-> product.validate(new ThrowsValidationHandler()));
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
@@ -45,15 +46,59 @@ public class ProductTest {
     @Test
     public void givenAnInvalidEmptyName_whenCallNewProduct_thenShouldReceiveError() {
         final String expectedName = "  ";
-        final var expectedQuantity = 10;
         final var expectedDescription = "Café para reuniões";
-        final var expectedErrorMessage = "'name' should be not empty";
+        final var expectedActive = true;
+        final var expectedErrorMessage = "'name' should not be empty";
         final var expectedErrorCount = 1;
 
-        final Product product = Product.newProduct(expectedName, expectedDescription, expectedQuantity);
+        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive);
 
         final var actualException = Assertions.assertThrows(DomainException.class, ()-> product.validate(new ThrowsValidationHandler()));
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+    }
+
+    @Test
+    public void givenAValidProduct_whenCallDeactive_shouldInactive() throws InterruptedException {
+        final var expectedName = "Café";
+        final var expectedDescription = "Café para reuniões";
+        final var expectedActive = false;
+
+        final Product product = Product.newProduct(expectedName, expectedDescription, true);
+        final var aUpdatedAt = product.getUpdatedAt();
+        Thread.sleep(200L);
+        final var actualProduct = product.deactive();
+
+        Assertions.assertNotNull(actualProduct);
+        Assertions.assertEquals(expectedName, actualProduct.getName());
+        Assertions.assertEquals(expectedDescription, actualProduct.getDescription());
+        Assertions.assertEquals(expectedActive, actualProduct.isActive());
+        Assertions.assertNotNull(actualProduct.getCreatedAt());
+        Assertions.assertNotNull(actualProduct.getUpdatedAt());
+        Assertions.assertTrue(actualProduct.getUpdatedAt().isAfter(aUpdatedAt));
+        Assertions.assertNotNull(actualProduct.getDeletedAt());
+
+    }
+
+    @Test
+    public void givenAValidProduct_whenCallActive_shouldActive() throws InterruptedException {
+        final var expectedName = "Café";
+        final var expectedDescription = "Café para reuniões";
+        final var expectedActive = true;
+
+        final Product product = Product.newProduct(expectedName, expectedDescription, false);
+        final var aUpdatedAt = product.getUpdatedAt();
+        Thread.sleep(200L);
+        final var actualProduct = product.activate();
+
+        Assertions.assertNotNull(actualProduct);
+        Assertions.assertEquals(expectedName, actualProduct.getName());
+        Assertions.assertEquals(expectedDescription, actualProduct.getDescription());
+        Assertions.assertEquals(expectedActive, actualProduct.isActive());
+        Assertions.assertNotNull(actualProduct.getCreatedAt());
+        Assertions.assertNotNull(actualProduct.getUpdatedAt());
+        Assertions.assertTrue(actualProduct.getUpdatedAt().isAfter(aUpdatedAt));
+        Assertions.assertNull(actualProduct.getDeletedAt());
+
     }
 }
