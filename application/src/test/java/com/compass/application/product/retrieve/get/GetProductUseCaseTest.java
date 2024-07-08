@@ -20,5 +20,5 @@ public class GetProductUseCaseTest implements UseCaseTest {
         return List.of(productGateway);
     }
 
-    
+
 }
