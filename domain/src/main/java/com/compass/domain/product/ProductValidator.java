@@ -4,6 +4,9 @@ import com.compass.domain.validation.Error;
 import com.compass.domain.validation.ValidationHandler;
 import com.compass.domain.validation.Validator;
 
+/**
+ * ProductValidator class is responsible for validating the Product entity.
+ */
 public class ProductValidator extends Validator {
 
     private final Product product;
@@ -12,41 +15,54 @@ public class ProductValidator extends Validator {
     private static final int MIN_LENGTH_PROD_DESCRIPTION = 1;
     private static final int MAX_LENGTH_PROD_DESCRIPTION = 1250;
 
-
+    /**
+     * Constructor for ProductValidator.
+     *
+     * @param aProduct           The product to be validated.
+     * @param aValidationHandler The handler for managing validation errors.
+     */
     public ProductValidator(Product aProduct, ValidationHandler aValidationHandler) {
-    super(aValidationHandler);
-    this.product = aProduct;
+        super(aValidationHandler);
+        this.product = aProduct;
     }
 
-
+    /**
+     * Validates the product by checking its name and description.
+     */
     @Override
     public void validate() {
         checkName();
         checkDescription();
     }
 
+    /**
+     * Checks the validity of the product name.
+     */
     private void checkName() {
         final var name = this.product.getName();
 
-        if(name == null) {
+        if (name == null) {
             this.validationHandler().append(new Error("'name' should not be null"));
             return;
         }
-        if(name.isBlank()) {
+        if (name.isBlank()) {
             this.validationHandler().append(new Error("'name' should not be empty"));
             return;
         }
 
-        if(name.trim().isEmpty()) {
+        if (name.trim().isEmpty()) {
             this.validationHandler().append(new Error("'name' should not be empty"));
             return;
         }
 
-        if(name.length() < MIN_LENGTH_PROD || name.length() > MAX_LENGTH_PROD) {
+        if (name.length() < MIN_LENGTH_PROD || name.length() > MAX_LENGTH_PROD) {
             this.validationHandler().append(new Error("'name' must be between 3 and 255 characters"));
         }
     }
 
+    /**
+     * Checks the validity of the product description.
+     */
     private void checkDescription() {
         final String description = this.product.getDescription();
 
@@ -61,7 +77,7 @@ public class ProductValidator extends Validator {
         }
 
         if (description.trim().length() < MIN_LENGTH_PROD_DESCRIPTION || description.trim().length() > MAX_LENGTH_PROD_DESCRIPTION) {
-            this.validationHandler().append(new Error("'description' must between 1 and 1250 characters"));
+            this.validationHandler().append(new Error("'description' must be between 1 and 1250 characters"));
         }
     }
 }

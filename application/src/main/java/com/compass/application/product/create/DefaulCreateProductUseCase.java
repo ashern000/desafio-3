@@ -23,10 +23,11 @@ public class DefaulCreateProductUseCase extends CreateProductUseCase {
         final String name = aCommand.name();
         final String description = aCommand.description();
         final boolean active = aCommand.isActive();
+        final double price = aCommand.price();
 
         final var notification = Notification.create();
-
-        final var aProduct = Product.newProduct(name, description, active);
+;
+        final var aProduct = Product.newProduct(name, description, active, price);
         aProduct.validate(notification);
 
         return notification.hasErrors() ? Left(notification) : create(aProduct);

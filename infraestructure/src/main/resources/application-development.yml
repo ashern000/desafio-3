@@ -1,0 +1,12 @@
+server:
+  port: 8081
+  undertow:
+    threads:
+      worker: 24
+      io: 2
+
+mysql:
+  username: root
+  password: 123456
+  schema: ecommerce
+  url: localhost:3306

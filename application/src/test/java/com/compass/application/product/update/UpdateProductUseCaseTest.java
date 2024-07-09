@@ -21,6 +21,8 @@ import static org.mockito.Mockito.*;
 
 public class UpdateProductUseCaseTest extends UseCaseTest {
 
+    // TODO: Fix test for update atribute price
+
     @InjectMocks
     private DefaultUpdateProductUseCase updateProductUseCase;
 
@@ -34,12 +36,13 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
 
 
     @Test
-    public void givenAValidCommand_whenCallsCreateProduct_shouldReturnCategoryId() {
-        final var aProduct = Product.newProduct("Caf", null, false);
+    public void givenAValidCommand_whenCallsUpdateProduct_shouldReturnCategoryId() {
+        final var aProduct = Product.newProduct("Caf", null, false, 0.1);
 
         final var expectedName = "Café";
         final var expectedDescription = "Café importado selo premium";
         final var expectedActive = true;
+        final var expectedPrice = 12.1;
         final var expectedId = aProduct.getId();
 
 
@@ -74,7 +77,7 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
     @Test
 
     public void givenAInvalidName_whenCallsUpdateProduct_thenShouldReturnDomainException() {
-        final var aProduct = Product.newProduct("Caf", null, false);
+        final var aProduct = Product.newProduct("Caf", null, false, 0.1);
 
         final String expectedName = null;
         final var expectedDescription = "Café importado selo premium";
@@ -97,7 +100,7 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
 
     @Test
     public void givenAValidInactiveCommand_whenCallsUpdateProduct_shouldReturnInativeProductId(){
-        final var aProduct = Product.newProduct("Caf", null, true);
+        final var aProduct = Product.newProduct("Caf", null, true, 0.1);
 
         final var expectedName = "Café";
         final var expectedDescription = "Café importado selo premium";
@@ -134,7 +137,7 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
 
     @Test
     public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnsExpection() {
-        final var aProduct = Product.newProduct("Caf", null, true);
+        final var aProduct = Product.newProduct("Caf", null, true, 0.1);
 
         final var expectedName = "Café";
         final var expectedDescription = "Café importado selo premium";
