@@ -105,11 +105,14 @@ public class CreateProductUseCaseTest extends UseCaseTest {
                 Não obstante, o julgamento imparcial das eventualidades possibilita uma melhor visão global das posturas dos órgãos dirigentes com relação às suas atribuições
                 Não obstante, o julgamento imparcial das eventualidades possibilita uma melhor visão global das posturas dos órgãos dirigentes com relação às suas atribuições
                 Não obstante, o julgamento imparcial das eventualidades possibilita uma melhor visão global das posturas dos órgãos dirigentes com relação às suas atribuições
+                Não obstante, o julgamento imparcial das eventualidades possibilita uma melhor visão global das posturas dos órgãos dirigentes com relação às suas atribuições
+                Não obstante, o julgamento imparcial das eventualidades possibilita uma melhor visão global das posturas dos órgãos dirigentes com relação às suas atribuições
+                Não obstante, o julgamento imparcial das eventualidades possibilita uma melhor visão global das posturas dos órgãos dirigentes com relação às suas atribuições
                 """;
         final String expectedName = "Café";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
-        final var expectedErrorMessage = "'description' must between 1 and 1250 characters";
+        final var expectedErrorMessage = "'description' must be between 1 and 1250 characters";
         final var expectedErrorCount = 1;
 
         final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice);

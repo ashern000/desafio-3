@@ -4,6 +4,7 @@ import com.compass.domain.AggregateRoot;
 import com.compass.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * Product class represents a product entity in the domain.
@@ -45,8 +46,8 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable {
         this.description = aDescription;
         this.active = isActive;
         this.price = aPrice;
-        this.createdAt = aCreatedAt;
-        this.updatedAt = aUpdatedAt;
+        this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' should not be null");
+        this.updatedAt = Objects.requireNonNull(aUpdatedAt, "'updatedAt' should not be null");
         this.deletedAt = aDeletedAt;
     }
 
