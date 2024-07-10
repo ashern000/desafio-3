@@ -8,7 +8,10 @@ import com.compass.application.product.retrieve.list.DefaultListProductUseCase;
 import com.compass.application.product.retrieve.list.ListProductUseCase;
 import com.compass.application.product.update.DefaultUpdateProductUseCase;
 import com.compass.application.product.update.UpdateProductUseCase;
+import com.compass.application.sale.create.CreateSaleUseCase;
+import com.compass.application.sale.create.DefaultCreateSaleUseCase;
 import com.compass.domain.product.ProductGateway;
+import com.compass.domain.sale.SaleGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,8 +20,11 @@ public class UseCasesConfig {
 
     private final ProductGateway productGateway;
 
-    public UseCasesConfig(final ProductGateway productGateway) {
+    private final SaleGateway saleGateway;
+
+    public UseCasesConfig(final ProductGateway productGateway, final SaleGateway saleGateway) {
         this.productGateway = productGateway;
+        this.saleGateway = saleGateway;
     }
 
     @Bean
@@ -39,5 +45,10 @@ public class UseCasesConfig {
     @Bean
     public ListProductUseCase listProductUseCase() {
         return new DefaultListProductUseCase(productGateway);
+    }
+
+    @Bean
+    public CreateSaleUseCase createSaleUseCase() {
+        return new DefaultCreateSaleUseCase(productGateway,saleGateway);
     }
 }

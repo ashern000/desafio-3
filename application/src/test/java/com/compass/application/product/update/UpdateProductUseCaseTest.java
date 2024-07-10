@@ -1,6 +1,6 @@
 package com.compass.application.product.update;
 
-import com.compass.application.product.UseCaseTest;
+import com.compass.application.UseCaseTest;
 import com.compass.domain.exceptions.NotFoundException;
 import com.compass.domain.product.Product;
 import com.compass.domain.product.ProductGateway;

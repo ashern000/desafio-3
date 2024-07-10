@@ -1,6 +1,6 @@
 package com.compass.application.product.retrieve.get;
 
-import com.compass.application.product.UseCaseTest;
+import com.compass.application.UseCaseTest;
 import com.compass.domain.exceptions.DomainException;
 import com.compass.domain.product.Product;
 import com.compass.domain.product.ProductGateway;
@@ -9,11 +9,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.compass.application.product;
+package com.compass.application;
 
 import com.compass.domain.Identifier;
 import org.junit.jupiter.api.Tag;

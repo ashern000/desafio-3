@@ -6,7 +6,7 @@ import com.compass.domain.product.ProductID;
 import java.time.Instant;
 
 public record GetProductOutput(
-        ProductID id,
+        String id,
         String name,
         boolean active,
         String description,
@@ -17,7 +17,7 @@ public record GetProductOutput(
 
 ) {
     public static GetProductOutput from(final Product aProduct) {
-        return new GetProductOutput(aProduct.getId(),
+        return new GetProductOutput(aProduct.getId().getValue(),
                 aProduct.getName(),
                 aProduct.isActive(),
                 aProduct.getDescription(),

@@ -8,11 +8,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
 @Table(name = "product")
-public class ProductJpaEntity {
+public class ProductJpaEntity implements Serializable {
 
     @Id
     private String id;

@@ -3,6 +3,7 @@ package com.compass.domain.product;
 import com.compass.domain.AggregateRoot;
 import com.compass.domain.validation.ValidationHandler;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
  * Product class represents a product entity in the domain.
  * It extends AggregateRoot and implements Cloneable.
  */
-public class Product extends AggregateRoot<ProductID> implements Cloneable {
+public class Product extends AggregateRoot<ProductID> implements Cloneable, Serializable {
 
     // Fields representing product properties
     private String name;

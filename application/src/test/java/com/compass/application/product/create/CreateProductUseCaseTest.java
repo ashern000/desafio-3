@@ -1,6 +1,6 @@
 package com.compass.application.product.create;
 
-import com.compass.application.product.UseCaseTest;
+import com.compass.application.UseCaseTest;
 import com.compass.domain.product.ProductGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

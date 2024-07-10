@@ -1,6 +1,6 @@
 package com.compass.application.product.retrieve.list;
 
-import com.compass.application.product.UseCaseTest;
+import com.compass.application.UseCaseTest;
 import com.compass.domain.product.Product;
 import com.compass.domain.product.ProductGateway;
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import static org.mockito.ArgumentMatchers.any;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

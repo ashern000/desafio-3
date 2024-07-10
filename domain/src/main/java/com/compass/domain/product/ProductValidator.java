@@ -66,13 +66,17 @@ public class ProductValidator extends Validator {
     private void checkDescription() {
         final String description = this.product.getDescription();
 
-        if (description.isEmpty()) {
-            this.validationHandler().append(new Error("'description' should not be empty"));
+        if (description == null) {
+            this.validationHandler().append(new Error("'description' should not be null"));
+            return;
+        }
+        if (description.isBlank()) {
+            this.validationHandler().append(new Error("'description' should not be null"));
             return;
         }
 
-        if (description.isBlank()) {
-            this.validationHandler().append(new Error("'description' should not be null"));
+        if (description.isEmpty()) {
+            this.validationHandler().append(new Error("'description' should not be empty"));
             return;
         }
 
