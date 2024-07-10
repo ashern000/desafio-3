@@ -28,10 +28,12 @@ public class DefaultUpdateProductUseCase extends UpdateProductUseCase{
         final var aName = aCommand.name();
         final var aDescription = aCommand.description();
         final var isActive = aCommand.isActive();
+        final var price = aCommand.price();
+        final var quantity = aCommand.quantity();
 
         final var aProduct = this.productGateway.findById(anId).orElseThrow(notFound(anId));
         final var notification = Notification.create();
-        aProduct.update(aName, aDescription, isActive).validate(notification);
+        aProduct.update(aName, aDescription, isActive, price, quantity).validate(notification);
 
         return notification.hasErrors() ? Left(notification) : update(aProduct);
 

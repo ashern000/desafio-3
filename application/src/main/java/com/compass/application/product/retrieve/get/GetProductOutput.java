@@ -11,6 +11,7 @@ public record GetProductOutput(
         boolean active,
         String description,
         double price,
+        int quantity,
         Instant createdAt,
         Instant updatedAt,
         Instant deletedAt
@@ -22,6 +23,7 @@ public record GetProductOutput(
                 aProduct.isActive(),
                 aProduct.getDescription(),
                 aProduct.getPrice(),
+                aProduct.getQuantity(),
                 aProduct.getCreatedAt(),
                 aProduct.getUpdatedAt(),
                 aProduct.getDeletedAt()

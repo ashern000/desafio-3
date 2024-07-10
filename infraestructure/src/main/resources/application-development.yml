@@ -9,11 +9,12 @@ server:
  # redis:
   #  host: localhost
    # port: 6379
-
 springdoc:
   swagger-ui:
-    path=/swagger-ui:
-      html:
+    enabled: true
+  api-docs:
+    enabled: true
+
 mysql:
   username: root
   password: 123456

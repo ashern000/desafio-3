@@ -18,6 +18,7 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
     private boolean active;
     private String description;
     private double price;
+    private int quantity;
     private Instant createdAt;
     private Instant updatedAt;
     private Instant deletedAt;
@@ -39,6 +40,7 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
                     final String aDescription,
                     final boolean isActive,
                     final double aPrice,
+                    final int aQuantity,
                     final Instant aCreatedAt,
                     final Instant aUpdatedAt,
                     final Instant aDeletedAt) {
@@ -47,6 +49,7 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
         this.description = aDescription;
         this.active = isActive;
         this.price = aPrice;
+        this.quantity = aQuantity;
         this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' should not be null");
         this.updatedAt = Objects.requireNonNull(aUpdatedAt, "'updatedAt' should not be null");
         this.deletedAt = aDeletedAt;
@@ -61,10 +64,10 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
      * @param aPrice      The price of the product.
      * @return A new Product instance.
      */
-    public static Product newProduct(final String aName, final String aDescription, final boolean isActive, final double aPrice) {
+    public static Product newProduct(final String aName, final String aDescription, final boolean isActive, final double aPrice, final int aQuantity) {
         final var anId = ProductID.unique();
         final var now = Instant.now();
-        return new Product(anId, aName, aDescription, isActive, aPrice, now, now, null);
+        return new Product(anId, aName, aDescription, isActive, aPrice,aQuantity, now, now, null);
     }
 
     /**
@@ -80,8 +83,8 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
      * @param deletedAt   The timestamp when the product was deleted.
      * @return A Product instance.
      */
-    public static Product with(final ProductID anId, final String aName, final String aDescription, final boolean isActive, final double aPrice, final Instant createdAt, final Instant updatedAt, final Instant deletedAt) {
-        return new Product(anId, aName, aDescription, isActive, aPrice, createdAt, updatedAt, deletedAt);
+    public static Product with(final ProductID anId, final String aName, final String aDescription, final boolean isActive, final double aPrice, final int aQuantity,final Instant createdAt, final Instant updatedAt, final Instant deletedAt) {
+        return new Product(anId, aName, aDescription, isActive, aPrice, aQuantity,createdAt, updatedAt, deletedAt);
     }
 
     /**
@@ -91,7 +94,7 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
      * @return A new Product instance.
      */
     public static Product with(final Product aProduct) {
-        return with(aProduct.getId(), aProduct.getName(), aProduct.getDescription(), aProduct.isActive(), aProduct.getPrice(), aProduct.getCreatedAt(), aProduct.getUpdatedAt(), aProduct.getDeletedAt());
+        return with(aProduct.getId(), aProduct.getName(), aProduct.getDescription(), aProduct.isActive(), aProduct.getPrice(), aProduct.getQuantity(),aProduct.getCreatedAt(), aProduct.getUpdatedAt(), aProduct.getDeletedAt());
     }
 
     /**
@@ -108,6 +111,8 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
     public String getName() {
         return name;
     }
+
+    public int getQuantity() { return quantity;}
 
     public String getDescription() {
         return description;
@@ -167,7 +172,7 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
      * @param isActive     The new active status of the product.
      * @return The current Product instance.
      */
-    public Product update(final String aName, final String aDescription, final boolean isActive) {
+    public Product update(final String aName, final String aDescription, final boolean isActive, final double aPrice, final int aQuantity) {
         if (isActive) {
             activate();
         } else {
@@ -175,6 +180,8 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
         }
         this.name = aName;
         this.description = aDescription;
+        this.price = aPrice;
+        this.quantity = aQuantity;
         this.updatedAt = Instant.now();
         return this;
     }

@@ -33,6 +33,7 @@ public class ProductValidator extends Validator {
     public void validate() {
         checkName();
         checkDescription();
+        checkPrice();
     }
 
     /**
@@ -82,6 +83,22 @@ public class ProductValidator extends Validator {
 
         if (description.trim().length() < MIN_LENGTH_PROD_DESCRIPTION || description.trim().length() > MAX_LENGTH_PROD_DESCRIPTION) {
             this.validationHandler().append(new Error("'description' must be between 1 and 1250 characters"));
+        }
+    }
+
+    private void checkPrice() {
+        double price = this.product.getPrice();
+
+        if (price <= 0) {
+            this.validationHandler().append(new Error("'price' must be greater than zero"));
+        }
+    }
+
+    private void checkQuantity() {
+        int quantity = this.product.getQuantity();
+
+        if (quantity < 0) {
+            this.validationHandler().append(new Error("'quantity' must be positive number"));
         }
     }
 }
