@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductMySQLGateway implements ProductGateway {
@@ -36,8 +37,6 @@ public class ProductMySQLGateway implements ProductGateway {
         return save(product);
     }
 
-
-
     @Override
     public Optional<Product> findById(ProductID anId) {
         return Optional.empty();
@@ -50,7 +49,14 @@ public class ProductMySQLGateway implements ProductGateway {
 
     @Override
     public List<Product> findAll() {
-        return List.of();
+        List<ProductJpaEntity> productEntities = repository.findAll();
+
+        // Convert each ProductJpaEntity to a Product and collect them into a list
+        List<Product> products = productEntities.stream()
+                .map(ProductJpaEntity::toDomain)
+                .collect(Collectors.toList());
+
+        return products;
     }
 
     private Product save(final Product product) {

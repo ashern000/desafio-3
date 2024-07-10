@@ -97,4 +97,23 @@ public class ProductMySQLGatewayTest {
         Assertions.assertEquals(aProduct.getDeletedAt(), productPersistence.getDeletedAt());
         Assertions.assertNull(productPersistence.getDeletedAt());
     }
+
+    @Test
+    public void whenCallsFindAll_shouldReturnAllProducts() {
+        final var firstProduct = Product.newProduct("Cafe", "Cafe premium", true, 10.1);
+        final var secondProduct = Product.newProduct("Cha", "Cha premium", true, 5.1);
+
+        Assertions.assertEquals(0, productRepository.count());
+
+        productGateway.create(firstProduct);
+        productGateway.create(secondProduct);
+
+        final var allProducts = productGateway.findAll();
+
+        Assertions.assertEquals(2, allProducts.size());
+
+        Assertions.assertTrue(allProducts.contains(firstProduct));
+        Assertions.assertTrue(allProducts.contains(secondProduct));
+    }
+
 }
