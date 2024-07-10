@@ -1,39 +1,104 @@
 package com.compass.infraestructure.sale.persistence;
 
 import com.compass.domain.product.Product;
+import com.compass.domain.product.ProductID;
 import com.compass.domain.sale.Sale;
 import com.compass.domain.sale.SaleID;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity
+@Entity(name = "Sale")
 @Table(name = "sales")
-public class SaleJpaEntity {
+public class SaleJpaEntity implements Serializable {
 
     @Id
-    private Long id;
+    @Column(name = "id", nullable = false)
+    private String id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "sale_id")
-    private List<SaleProductJpaEntity> saleProducts;
+    @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
+    private Instant createdAt;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "updated_at", nullable = false, columnDefinition = "DATETIME(6)")
+    private Instant updatedAt;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<SaleProductJpaEntity> getSaleProducts() {
-        return saleProducts;
-    }
-
-    public void setSaleProducts(List<SaleProductJpaEntity> saleProducts) {
-        this.saleProducts = saleProducts;
-    }
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SaleProductJpaEntity> products;
 
     public SaleJpaEntity() {}
 
+    private SaleJpaEntity(
+            final String id,
+            final Instant createdAt,
+            final Instant updatedAt
+    ) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.products = new HashSet<>();
+    }
+
+    public static SaleJpaEntity from(final Sale aSale) {
+        final var anEntity = new SaleJpaEntity(
+                aSale.getId().getValue(),
+                aSale.getCreatedAt(),
+                aSale.getUpdatedAt()
+        );
+        aSale.getProductsIds().forEach(anEntity::addProduct);
+        return anEntity;
+    }
+
+    public Sale toDomain() {
+        return Sale.with(SaleID.from(getId()), getProductIDS(), getCreatedAt(), getUpdatedAt());
+    }
+
+    public List<ProductID> getProductIDS() {
+        return getProducts().stream().map(it -> ProductID.from(it.getId().getProductId())).toList();
+    }
+
+    private void addProduct(final ProductID anId){
+        this.products.add(SaleProductJpaEntity.from(this, anId));
+    }
+
+    private void removeProduct(final ProductID anId){
+        this.products.remove(SaleProductJpaEntity.from(this, anId));
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Set<SaleProductJpaEntity> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<SaleProductJpaEntity> products) {
+        this.products = products;
+    }
 }
+

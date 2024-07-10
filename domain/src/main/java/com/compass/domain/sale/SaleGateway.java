@@ -46,9 +46,9 @@ public interface SaleGateway {
      * Finds sales containing a specific product.
      *
      * @param productId The unique identifier of the product to be found in sales.
-     * @return A list of sales containing the product.
+     * @return A boolean containing the product.
      */
-    List<Sale> findByProductId(ProductID productId);
+    boolean findByProductId(ProductID productId);
 
     /**
      * Retrieves all sales.
@@ -56,4 +56,6 @@ public interface SaleGateway {
      * @return A list of all sales.
      */
     List<Sale> findAll();
+
+    List<Sale> findAllSalesByProductId(ProductID productID);
 }

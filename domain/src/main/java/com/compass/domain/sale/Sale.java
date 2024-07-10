@@ -6,6 +6,7 @@ import com.compass.domain.product.ProductID;
 import com.compass.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -85,7 +86,7 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
     // Getters for the sale properties
 
     public List<ProductID> getProductsIds() {
-        return products;
+        return Collections.unmodifiableList(products);
     }
 
     public Instant getCreatedAt() {

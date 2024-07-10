@@ -1,5 +1,6 @@
 package com.compass.infraestructure.sale.persistence;
 
+import com.compass.domain.product.ProductID;
 import com.compass.infraestructure.product.persistence.ProductJpaEntity;
 import jakarta.persistence.*;
 
@@ -7,17 +8,53 @@ import jakarta.persistence.*;
 @Table(name = "sale_products")
 public class SaleProductJpaEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private SaleProductID id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private ProductJpaEntity product;
+    @MapsId("saleId")
+    private SaleJpaEntity sale;
+    public SaleProductJpaEntity() {}
 
-    @Column(name = "quantity")
-    private int quantity;
+    private SaleProductJpaEntity(final SaleJpaEntity aSale, final ProductID aProduct) {
+        this.id = SaleProductID.from(aProduct.getValue(), aSale.getId());
+        this.sale = aSale;
+    }
 
-    // getters and setters
+    public static SaleProductJpaEntity from (final SaleJpaEntity aProduct, final ProductID aProductId) {
+        return new SaleProductJpaEntity(aProduct, aProductId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SaleProductJpaEntity that = (SaleProductJpaEntity) o;
+        return getId().equals(that.getId()) && getSale().equals(that.getSale());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getSale().hashCode();
+        return result;
+    }
+
+    public SaleProductID getId() {
+        return id;
+    }
+
+    public void setId(SaleProductID id) {
+        this.id = id;
+    }
+
+    public SaleJpaEntity getSale() {
+        return sale;
+    }
+
+    public void setSale(SaleJpaEntity sale) {
+        this.sale = sale;
+    }
 }
 

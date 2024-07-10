@@ -5,10 +5,10 @@ server:
       worker: 24
       io: 2
 
-spring:
-  redis:
-    host: localhost
-    port: 6379
+#spring:
+ # redis:
+  #  host: localhost
+   # port: 6379
 
 springdoc:
   swagger-ui:

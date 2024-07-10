@@ -4,47 +4,66 @@ import com.compass.domain.product.ProductID;
 import com.compass.domain.sale.Sale;
 import com.compass.domain.sale.SaleGateway;
 import com.compass.domain.sale.SaleID;
+import com.compass.infraestructure.sale.persistence.SaleJpaEntity;
+import com.compass.infraestructure.sale.persistence.SaleProductJpaEntity;
 import com.compass.infraestructure.sale.persistence.SaleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SaleMySQLGateway implements SaleGateway {
-    private SaleRepository repository;
+    private final SaleRepository repository;
 
     public SaleMySQLGateway(final SaleRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Sale create(Sale sale) {
-        return null;
+    public Sale create(final Sale sale) {
+        return save(sale);
     }
 
     @Override
     public void delete(SaleID anId) {
-
+        this.repository.deleteById(anId.getValue());
     }
 
     @Override
     public Sale update(Sale sale) {
-        return null;
+        return save(sale);
+    }
+
+    private Sale save(Sale sale) {
+        return this.repository.save(SaleJpaEntity.from(sale)).toDomain();
     }
 
     @Override
     public Optional<Sale> findById(SaleID anId) {
-        return Optional.empty();
+        return this.repository.findById(anId.getValue()).map(SaleJpaEntity::toDomain);
     }
 
     @Override
-    public List<Sale> findByProductId(ProductID productId) {
-        return List.of();
+    public boolean findByProductId(ProductID productId) {
+        return this.repository.existsProductInSale(productId.getValue());
     }
 
     @Override
     public List<Sale> findAll() {
-        return List.of();
+        return this.repository.findAll()
+                .stream()
+                .map(SaleJpaEntity::toDomain)
+                .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Sale> findAllSalesByProductId(ProductID productID) {
+        return this.repository.findSalesByProductId(productID.getValue()).stream()
+                .map(SaleJpaEntity::toDomain)
+                .collect(Collectors.toList());
+    }
+
+
 }
