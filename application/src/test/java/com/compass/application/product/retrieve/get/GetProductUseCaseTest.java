@@ -35,8 +35,9 @@ public class GetProductUseCaseTest extends UseCaseTest {
         final var expectedDescription = "Café importado selo premium";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
 
-        final var aProduct = Product.newProduct(expectedName, expectedDescription, expectedActive, expectedPrice);
+        final var aProduct = Product.newProduct(expectedName, expectedDescription, expectedActive, expectedPrice, expectedQuantity);
 
         final var anId = aProduct.getId();
 
@@ -46,7 +47,7 @@ public class GetProductUseCaseTest extends UseCaseTest {
 
         final var actualProduct = defaultGetProductUseCase.execute(aCommand);
 
-        Assertions.assertEquals(anId, actualProduct.id());
+        Assertions.assertEquals(anId.getValue(), actualProduct.id());
         Assertions.assertEquals(expectedName, actualProduct.name());
         Assertions.assertEquals(expectedDescription, actualProduct.description());
         Assertions.assertEquals(expectedPrice, actualProduct.price());

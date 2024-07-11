@@ -37,18 +37,19 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
 
     @Test
     public void givenAValidCommand_whenCallsUpdateProduct_shouldReturnCategoryId() {
-        final var aProduct = Product.newProduct("Caf", null, false, 0.1);
+        final var aProduct = Product.newProduct("Caf", null, false, 0.1, 10);
 
         final var expectedName = "Café";
         final var expectedDescription = "Café importado selo premium";
         final var expectedActive = true;
         final var expectedPrice = 12.1;
+        final var expectedQuantity = 100;
         final var expectedId = aProduct.getId();
 
 
 
 
-        final var aCommand = UpdateProductCommand.with(expectedId.getValue(),expectedName, expectedDescription, expectedActive);
+        final var aCommand = UpdateProductCommand.with(expectedId.getValue(),expectedName, expectedDescription, expectedActive,expectedPrice, expectedQuantity);
 
         when(productGateway.findById(eq(expectedId))).thenReturn(Optional.of(Product.with(aProduct)));
 
@@ -77,16 +78,18 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
     @Test
 
     public void givenAInvalidName_whenCallsUpdateProduct_thenShouldReturnDomainException() {
-        final var aProduct = Product.newProduct("Caf", null, false, 0.1);
+        final var aProduct = Product.newProduct("Caf", null, false, 0.1, 1);
 
         final String expectedName = null;
         final var expectedDescription = "Café importado selo premium";
         final var expectedActive = true;
         final var expectedId = aProduct.getId();
+        final var expectedPrice = 1.1;
+        final var expectedQuantity = 100;
         final var expectedMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final var aCommand = UpdateProductCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedActive);
+        final var aCommand = UpdateProductCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedActive,expectedPrice, expectedQuantity);
 
         when(productGateway.findById(eq(expectedId))).thenReturn(Optional.of(Product.with(aProduct)));
 
@@ -100,15 +103,17 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
 
     @Test
     public void givenAValidInactiveCommand_whenCallsUpdateProduct_shouldReturnInativeProductId(){
-        final var aProduct = Product.newProduct("Caf", null, true, 0.1);
+        final var aProduct = Product.newProduct("Caf", null, true, 0.1, 3);
 
         final var expectedName = "Café";
         final var expectedDescription = "Café importado selo premium";
+        final var expectedPrice = 1.1;
+        final var expectedQuantity = 100;
         final var expectedActive = false;
         final var expectedId = aProduct.getId();
 
 
-        final var aCommand = UpdateProductCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedActive);
+        final var aCommand = UpdateProductCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedActive,expectedPrice, expectedQuantity);
 
         when(productGateway.findById(eq(expectedId))).thenReturn(Optional.of(Product.with(aProduct)));
 
@@ -137,16 +142,18 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
 
     @Test
     public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnsExpection() {
-        final var aProduct = Product.newProduct("Caf", null, true, 0.1);
+        final var aProduct = Product.newProduct("Caf", null, true, 0.1, 10);
 
         final var expectedName = "Café";
         final var expectedDescription = "Café importado selo premium";
         final var expectedActive = true;
+        final var expectedPrice = 1.1;
+        final var expectedQuantity = 100;
         final var expectedId = aProduct.getId();
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "Gateway error";
 
-        final var aCommand = UpdateProductCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedActive);
+        final var aCommand = UpdateProductCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedActive,expectedPrice, expectedQuantity);
 
         when(productGateway.findById(eq(expectedId))).thenReturn(Optional.of(Product.with(aProduct)));
 
@@ -178,10 +185,12 @@ public class UpdateProductUseCaseTest extends UseCaseTest {
         final var expectedName = "Café";
         final var expectedDescription = "Café importado selo premium";
         final var expectedActive = true;
+        final var expectedPrice = 1.1;
+        final var expectedQuantity = 100;
         final var expectedId = "123";
         final var expectedMessage = "Product with ID 123 was not found";
 
-        final var aCommand = UpdateProductCommand.with(expectedId, expectedName, expectedDescription, expectedActive);
+        final var aCommand = UpdateProductCommand.with(expectedId, expectedName, expectedDescription, expectedActive,expectedPrice, expectedQuantity);
 
         when(productGateway.findById(eq(ProductID.from(expectedId)))).thenReturn(Optional.empty());
 

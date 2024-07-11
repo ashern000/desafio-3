@@ -29,8 +29,8 @@ public class ListProductUseCaseTest extends UseCaseTest {
     @Test
     public void givenAValidListOfProducts_whenCallsUseCase() {
         final var products = List.of(
-                Product.newProduct("Cafe", "Cafe premium", true, 10.1),
-                Product.newProduct("Cha", "Cha verde", true, 11.1)
+                Product.newProduct("Cafe", "Cafe premium", true, 10.1, 10),
+                Product.newProduct("Cha", "Cha verde", true, 11.1, 10)
         );
         final var productOutputs = products.stream().map(ListProductOutput::from).toList();
         Mockito.when(productGateway.findAll()).thenReturn(products);

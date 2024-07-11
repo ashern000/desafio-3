@@ -2,6 +2,8 @@ package com.compass.infraestructure.api.controllers;
 
 import com.compass.application.sale.create.CreateSaleCommand;
 import com.compass.application.sale.create.CreateSaleUseCase;
+import com.compass.application.sale.delete.DeleteSaleCommand;
+import com.compass.application.sale.delete.DeleteSaleUseCase;
 import com.compass.application.sale.retrieve.list.defaultlist.ListSaleUseCase;
 import com.compass.application.sale.retrieve.list.filtersalesbydate.FilterSalesByDateCommand;
 import com.compass.application.sale.retrieve.list.filtersalesbydate.FilterSalesByDateUseCase;
@@ -11,6 +13,8 @@ import com.compass.domain.exceptions.NotificationException;
 import com.compass.infraestructure.api.SaleAPI;
 import com.compass.infraestructure.sale.models.CreateSaleApiInput;
 import com.compass.infraestructure.sale.models.GenerateSalesReportApiInput;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,13 +38,17 @@ public class SaleController implements SaleAPI {
 
     private GenerateSalesReportUseCase generateSalesReportUseCase;
 
-    public SaleController(final CreateSaleUseCase createSaleUseCase, final FilterSalesByDateUseCase filterSalesByDateUseCase, final ListSaleUseCase listSaleUseCase, final GenerateSalesReportUseCase generateSalesReportUseCase) {
+    private DeleteSaleUseCase deleteSaleUseCase;
+
+    public SaleController(final CreateSaleUseCase createSaleUseCase, final FilterSalesByDateUseCase filterSalesByDateUseCase, final ListSaleUseCase listSaleUseCase, final GenerateSalesReportUseCase generateSalesReportUseCase, final DeleteSaleUseCase deleteSaleUseCase) {
         this.createSaleUseCase = Objects.requireNonNull(createSaleUseCase);
         this.filterSalesByDateUseCase = Objects.requireNonNull(filterSalesByDateUseCase);
         this.listSaleUseCase = Objects.requireNonNull(listSaleUseCase);
         this.generateSalesReportUseCase = Objects.requireNonNull(generateSalesReportUseCase);
+        this.deleteSaleUseCase = Objects.requireNonNull(deleteSaleUseCase);
     }
 
+    @CacheEvict(value = "sales", allEntries = true)
     public ResponseEntity<?> createSale(final CreateSaleApiInput input) {
         final var productSales = input.productSales();
 
@@ -60,21 +68,41 @@ public class SaleController implements SaleAPI {
         }
     }
 
+    @Cacheable(value = "sales")
     @Override
     public List<?> listSales() {
         return this.listSaleUseCase.execute();
     }
 
+    @Cacheable(value = "sales")
     @Override
     public List<?> listSalesByDate(Instant startDate, Instant endDate) {
         final var aCommand = FilterSalesByDateCommand.from(startDate,endDate);
         return this.filterSalesByDateUseCase.execute(aCommand);
     }
 
+    @Cacheable(value = "sales")
     @Override
     public List<?> generateSalesReport(GenerateSalesReportApiInput.ReportType reportType) {
         final var aCommand = GenerateSalesReportCommand.from(reportType.toString());
         return this.generateSalesReportUseCase.execute(aCommand);
     }
+
+    @CacheEvict(value = "sales", allEntries = true)
+    @Override
+    public ResponseEntity<?> deleteSale(String saleId) {
+        System.out.println(saleId);
+        try {
+            final var aCommand = DeleteSaleCommand.with(saleId);
+            return ResponseEntity.ok(this.deleteSaleUseCase.execute(aCommand));
+        } catch (NotificationException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while trying to delete the sale.");
+        }
+    }
+
 
 }

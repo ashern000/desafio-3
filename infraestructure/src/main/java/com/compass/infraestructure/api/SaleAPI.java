@@ -62,8 +62,11 @@ public interface SaleAPI {
             @ApiResponse(responseCode = "422", description = "Unprocessable error"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
-    @GetMapping(value = "/sales/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<?> generateSalesReport(
             @RequestParam("reportType") GenerateSalesReportApiInput.ReportType reportType
     );
+
+    @DeleteMapping()
+    public ResponseEntity<?> deleteSale(@RequestParam("saleId") String saleId);
 }

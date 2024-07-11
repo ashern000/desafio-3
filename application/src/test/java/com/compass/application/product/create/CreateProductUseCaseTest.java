@@ -34,8 +34,9 @@ public class CreateProductUseCaseTest extends UseCaseTest {
         final var expectedDescription = "Café importado selo premium";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
 
-        final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice);
+        final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice, expectedQuantity);
 
         when(productGateway.create(any())).thenAnswer(returnsFirstArg());
 
@@ -62,10 +63,11 @@ public class CreateProductUseCaseTest extends UseCaseTest {
         final var expectedDescription = "Café importado selo premium";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
         final var expectedErrorMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice);
+        final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice, expectedQuantity);
 
         final var notification = createProductUseCase.execute(aCommand).getLeft();
 
@@ -81,10 +83,11 @@ public class CreateProductUseCaseTest extends UseCaseTest {
         final var expectedDescription = "";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
-        final var expectedErrorMessage = "'description' should not be empty";
+        final var expectedQuantity = 10;
+        final var expectedErrorMessage = "'description' should not be null";
         final var expectedErrorCount = 1;
 
-        final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice );
+        final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice, expectedQuantity);
 
         final var notification = createProductUseCase.execute(aCommand).getLeft();
 
@@ -112,10 +115,11 @@ public class CreateProductUseCaseTest extends UseCaseTest {
         final String expectedName = "Café";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
         final var expectedErrorMessage = "'description' must be between 1 and 1250 characters";
         final var expectedErrorCount = 1;
 
-        final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice);
+        final var aCommand = CreateProductCommand.with(expectedName, expectedDescription, expectedActive, expectedPrice, expectedQuantity);
 
         final var notification = createProductUseCase.execute(aCommand).getLeft();
 

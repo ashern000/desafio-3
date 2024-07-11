@@ -12,6 +12,7 @@ import com.compass.application.product.update.DefaultUpdateProductUseCase;
 import com.compass.application.product.update.UpdateProductUseCase;
 import com.compass.application.sale.create.CreateSaleUseCase;
 import com.compass.application.sale.create.DefaultCreateSaleUseCase;
+import com.compass.application.sale.delete.DefaultDeleteSaleUseCase;
 import com.compass.application.sale.retrieve.list.defaultlist.DefaultListSaleUseCase;
 import com.compass.application.sale.retrieve.list.filtersalesbydate.DefaultFilterSalesByDateUseCase;
 import com.compass.application.sale.retrieve.list.generatesalesreport.DefaultGenerateSalesReportUseCase;
@@ -73,5 +74,10 @@ public class UseCasesConfig {
     @Bean
     public DefaultGenerateSalesReportUseCase generateSalesReportUseCase() {
         return new DefaultGenerateSalesReportUseCase(saleGateway);
+    }
+
+    @Bean
+    public DefaultDeleteSaleUseCase deleteSaleUseCase() {
+        return new DefaultDeleteSaleUseCase(saleGateway);
     }
 }
