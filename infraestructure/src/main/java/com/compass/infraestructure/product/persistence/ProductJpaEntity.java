@@ -30,6 +30,9 @@ public class ProductJpaEntity implements Serializable {
     @Column(name = "active", nullable = false)
     private boolean active;
 
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
+
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant createdAt;
 
@@ -46,6 +49,7 @@ public class ProductJpaEntity implements Serializable {
                              final String name,
                              final String description,
                              final double price,
+                             final int quantity,
                              final boolean active,
                              final Instant createdAt,
                              final Instant updatedAt,
@@ -55,6 +59,7 @@ public class ProductJpaEntity implements Serializable {
         this.description = description;
         this.price = price;
         this.active = active;
+        this.quantity = quantity;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
@@ -66,6 +71,7 @@ public class ProductJpaEntity implements Serializable {
                 aProduct.getName(),
                 aProduct.getDescription(),
                 aProduct.getPrice(),
+                aProduct.getQuantity(),
                 aProduct.isActive(),
                 aProduct.getCreatedAt(),
                 aProduct.getUpdatedAt(),
@@ -80,6 +86,7 @@ public class ProductJpaEntity implements Serializable {
                 getDescription(),
                 isActive(),
                 getPrice(),
+                getQuantity(),
                 getCreatedAt(),
                 getUpdatedAt(),
                 getDeletedAt()
@@ -125,6 +132,10 @@ public class ProductJpaEntity implements Serializable {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public int getQuantity() {return quantity;}
+
+    public void setQuantity(int quantity) {this.quantity = quantity;}
 
     public Instant getCreatedAt() {
         return createdAt;

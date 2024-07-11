@@ -29,7 +29,10 @@ public class ProductMySQLGateway implements ProductGateway {
 
     @Override
     public void delete(ProductID anId) {
-
+        String id = anId.getValue();
+        if(this.repository.existsById(id)) {
+            this.repository.deleteById(id);
+        }
     }
 
     @Override
@@ -39,7 +42,7 @@ public class ProductMySQLGateway implements ProductGateway {
 
     @Override
     public Optional<Product> findById(ProductID anId) {
-        return Optional.empty();
+        return this.repository.findById(anId.getValue()).map(ProductJpaEntity::toDomain);
     }
 
     @Override

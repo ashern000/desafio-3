@@ -14,8 +14,9 @@ public class ProductTest {
         final var expectedDescription = "Café para reuniões";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
 
-        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive, expectedPrice);
+        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive, expectedPrice, expectedQuantity);
 
 
         Assertions.assertNotNull(product);
@@ -36,10 +37,12 @@ public class ProductTest {
         final var expectedDescription = "Café para reuniões";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
         final var expectedErrorMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive, expectedPrice);
+
+        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive, expectedPrice, expectedQuantity);
 
         final var actualException = Assertions.assertThrows(DomainException.class, ()-> product.validate(new ThrowsValidationHandler()));
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
@@ -52,10 +55,11 @@ public class ProductTest {
         final var expectedDescription = "Café para reuniões";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
         final var expectedErrorMessage = "'name' should not be empty";
         final var expectedErrorCount = 1;
 
-        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive, expectedPrice);
+        final Product product = Product.newProduct(expectedName, expectedDescription, expectedActive, expectedPrice, expectedQuantity);
 
         final var actualException = Assertions.assertThrows(DomainException.class, ()-> product.validate(new ThrowsValidationHandler()));
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
@@ -68,8 +72,9 @@ public class ProductTest {
         final var expectedDescription = "Café para reuniões";
         final var expectedActive = false;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
 
-        final Product product = Product.newProduct(expectedName, expectedDescription, true, expectedPrice);
+        final Product product = Product.newProduct(expectedName, expectedDescription, true, expectedPrice, expectedQuantity);
         final var aUpdatedAt = product.getUpdatedAt();
         Thread.sleep(200L);
         final var actualProduct = product.deactivate();
@@ -91,8 +96,9 @@ public class ProductTest {
         final var expectedDescription = "Café para reuniões";
         final var expectedActive = true;
         final var expectedPrice = 10.3;
+        final var expectedQuantity = 10;
 
-        final Product product = Product.newProduct(expectedName, expectedDescription, false, expectedPrice);
+        final Product product = Product.newProduct(expectedName, expectedDescription, false, expectedPrice, expectedQuantity);
         final var aUpdatedAt = product.getUpdatedAt();
         Thread.sleep(200L);
         final var actualProduct = product.activate();

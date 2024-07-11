@@ -19,10 +19,7 @@ public class DefaultCreateSaleUseCase extends CreateSaleUseCase {
     private final ProductGateway productGateway;
     private final SaleGateway saleGateway;
 
-    public DefaultCreateSaleUseCase(
-            final ProductGateway productGateway,
-            final SaleGateway saleGateway
-    ) {
+    public DefaultCreateSaleUseCase(final ProductGateway productGateway, final SaleGateway saleGateway) {
         this.productGateway = Objects.requireNonNull(productGateway);
         this.saleGateway = Objects.requireNonNull(saleGateway);
     }
@@ -45,17 +42,16 @@ public class DefaultCreateSaleUseCase extends CreateSaleUseCase {
     private ValidationHandler validateProducts(final List<CreateSaleCommand.ProductSale> productSales) {
         final var notification = Notification.create();
         if (productSales == null || productSales.isEmpty()) {
-            return notification;
+            return notification.append(new Error("No Products for insert in Sale"));
         }
 
         for (CreateSaleCommand.ProductSale productSale : productSales) {
             var product = productGateway.findById(ProductID.from(productSale.getProductId()));
             if (product.isEmpty()) {
                 notification.append(new Error("Product with ID " + productSale.getProductId() + " does not exist"));
+            } else if (product.get().getQuantity() < productSale.getQuantity()) {
+                notification.append(new Error("Product with ID " + productSale.getProductId() + " does not have enough quantity available"));
             }
-//            } else if (product.get().getQuantity() < productSale.getQuantity()) {
-//                notification.append(new Error("Product with ID " + productSale.getProductId() + " does not have enough quantity available"));
-//            }
         }
 
         return notification;

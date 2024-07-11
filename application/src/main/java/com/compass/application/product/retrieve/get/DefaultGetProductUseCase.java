@@ -8,7 +8,7 @@ import com.compass.domain.validation.Error;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class DefaultGetProductUseCase extends GetProductUseCase{
+public class DefaultGetProductUseCase extends GetProductUseCase {
 
     private ProductGateway productGateway;
 
@@ -22,7 +22,7 @@ public class DefaultGetProductUseCase extends GetProductUseCase{
         return this.productGateway.findById(anProductId).map(GetProductOutput::from).orElseThrow(notFound(anProductId));
     }
 
-    private Supplier<DomainException> notFound(final ProductID anId){
-        return ()-> DomainException.with(new Error("Product with ID %s was not found".formatted(anId.getValue())));
+    private Supplier<DomainException> notFound(final ProductID anId) {
+        return () -> DomainException.with(new Error("Product with ID %s was not found".formatted(anId.getValue())));
     }
 }

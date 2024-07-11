@@ -8,8 +8,8 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * Product class represents a product entity in the domain.
- * It extends AggregateRoot and implements Cloneable.
+ * A Product class that represents a product entity in the domain.
+ * This class extends AggregateRoot and implements Cloneable and Serializable interfaces.
  */
 public class Product extends AggregateRoot<ProductID> implements Cloneable, Serializable {
 
@@ -26,14 +26,15 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
     /**
      * Private constructor for the Product class.
      *
-     * @param anId        The unique identifier for the product.
-     * @param aName       The name of the product.
+     * @param anId         The unique identifier for the product.
+     * @param aName        The name of the product.
      * @param aDescription The description of the product.
-     * @param isActive    The active status of the product.
-     * @param aPrice      The price of the product.
-     * @param aCreatedAt  The timestamp when the product was created.
-     * @param aUpdatedAt  The timestamp when the product was last updated.
-     * @param aDeletedAt  The timestamp when the product was deleted.
+     * @param isActive     The active status of the product.
+     * @param aPrice       The price of the product.
+     * @param aQuantity    The quantity of the product.
+     * @param aCreatedAt   The timestamp when the product was created.
+     * @param aUpdatedAt   The timestamp when the product was last updated.
+     * @param aDeletedAt   The timestamp when the product was deleted.
      */
     private Product(final ProductID anId,
                     final String aName,
@@ -58,33 +59,35 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
     /**
      * Static factory method to create a new product.
      *
-     * @param aName       The name of the product.
+     * @param aName        The name of the product.
      * @param aDescription The description of the product.
-     * @param isActive    The active status of the product.
-     * @param aPrice      The price of the product.
+     * @param isActive     The active status of the product.
+     * @param aPrice       The price of the product.
+     * @param aQuantity    The quantity of the product.
      * @return A new Product instance.
      */
     public static Product newProduct(final String aName, final String aDescription, final boolean isActive, final double aPrice, final int aQuantity) {
         final var anId = ProductID.unique();
         final var now = Instant.now();
-        return new Product(anId, aName, aDescription, isActive, aPrice,aQuantity, now, now, null);
+        return new Product(anId, aName, aDescription, isActive, aPrice, aQuantity, now, now, null);
     }
 
     /**
      * Static factory method to create a product with specific attributes.
      *
-     * @param anId        The unique identifier for the product.
-     * @param aName       The name of the product.
+     * @param anId         The unique identifier for the product.
+     * @param aName        The name of the product.
      * @param aDescription The description of the product.
-     * @param isActive    The active status of the product.
-     * @param aPrice      The price of the product.
-     * @param createdAt   The timestamp when the product was created.
-     * @param updatedAt   The timestamp when the product was last updated.
-     * @param deletedAt   The timestamp when the product was deleted.
+     * @param isActive     The active status of the product.
+     * @param aPrice       The price of the product.
+     * @param aQuantity    The quantity of the product.
+     * @param createdAt    The timestamp when the product was created.
+     * @param updatedAt    The timestamp when the product was last updated.
+     * @param deletedAt    The timestamp when the product was deleted.
      * @return A Product instance.
      */
-    public static Product with(final ProductID anId, final String aName, final String aDescription, final boolean isActive, final double aPrice, final int aQuantity,final Instant createdAt, final Instant updatedAt, final Instant deletedAt) {
-        return new Product(anId, aName, aDescription, isActive, aPrice, aQuantity,createdAt, updatedAt, deletedAt);
+    public static Product with(final ProductID anId, final String aName, final String aDescription, final boolean isActive, final double aPrice, final int aQuantity, final Instant createdAt, final Instant updatedAt, final Instant deletedAt) {
+        return new Product(anId, aName, aDescription, isActive, aPrice, aQuantity, createdAt, updatedAt, deletedAt);
     }
 
     /**
@@ -94,7 +97,7 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
      * @return A new Product instance.
      */
     public static Product with(final Product aProduct) {
-        return with(aProduct.getId(), aProduct.getName(), aProduct.getDescription(), aProduct.isActive(), aProduct.getPrice(), aProduct.getQuantity(),aProduct.getCreatedAt(), aProduct.getUpdatedAt(), aProduct.getDeletedAt());
+        return with(aProduct.getId(), aProduct.getName(), aProduct.getDescription(), aProduct.isActive(), aProduct.getPrice(), aProduct.getQuantity(), aProduct.getCreatedAt(), aProduct.getUpdatedAt(), aProduct.getDeletedAt());
     }
 
     /**
@@ -112,7 +115,9 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
         return name;
     }
 
-    public int getQuantity() { return quantity;}
+    public int getQuantity() {
+        return quantity;
+    }
 
     public String getDescription() {
         return description;
@@ -170,6 +175,8 @@ public class Product extends AggregateRoot<ProductID> implements Cloneable, Seri
      * @param aName        The new name of the product.
      * @param aDescription The new description of the product.
      * @param isActive     The new active status of the product.
+     * @param aPrice       The new price of the product.
+     * @param aQuantity    The new quantity of the product.
      * @return The current Product instance.
      */
     public Product update(final String aName, final String aDescription, final boolean isActive, final double aPrice, final int aQuantity) {

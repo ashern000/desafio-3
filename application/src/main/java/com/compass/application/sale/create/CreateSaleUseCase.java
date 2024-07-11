@@ -4,5 +4,5 @@ import com.compass.application.UseCase;
 import com.compass.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 
-public abstract class CreateSaleUseCase extends UseCase<CreateSaleCommand,  CreateSaleOutput> {
+public abstract class CreateSaleUseCase extends UseCase<CreateSaleCommand, CreateSaleOutput> {
 }

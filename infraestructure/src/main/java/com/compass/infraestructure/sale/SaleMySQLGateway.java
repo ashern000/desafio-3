@@ -60,6 +60,9 @@ public class SaleMySQLGateway implements SaleGateway {
 
     @Override
     public List<Sale> findAllSalesByProductId(ProductID productID) {
+        System.out.println(this.repository.findSalesByProductId(productID.getValue()).stream()
+                .map(SaleJpaEntity::toDomain)
+                .collect(Collectors.toList()));
         return this.repository.findSalesByProductId(productID.getValue()).stream()
                 .map(SaleJpaEntity::toDomain)
                 .collect(Collectors.toList());

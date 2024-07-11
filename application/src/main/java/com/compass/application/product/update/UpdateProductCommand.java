@@ -1,6 +1,7 @@
 package com.compass.application.product.update;
 
-public record UpdateProductCommand(String id, String name, String description, boolean isActive, double price, int quantity) {
+public record UpdateProductCommand(String id, String name, String description, boolean isActive, double price,
+                                   int quantity) {
 
     public static UpdateProductCommand with(
             final String anId,
@@ -10,6 +11,6 @@ public record UpdateProductCommand(String id, String name, String description, b
             final double price,
             final int quantity
     ) {
-        return new UpdateProductCommand(anId,aName, aDescription, isActive, price, quantity);
+        return new UpdateProductCommand(anId, aName, aDescription, isActive, price, quantity);
     }
 }

@@ -6,10 +6,7 @@ import com.compass.domain.sale.SaleID;
 
 import java.util.List;
 
-public record CreateSaleOutput(
-        String id,
-        List<String> productIds
-) {
+public record CreateSaleOutput(String id, List<String> productIds) {
     public static CreateSaleOutput from(final String id, final List<String> productIds) {
         return new CreateSaleOutput(id, productIds);
     }

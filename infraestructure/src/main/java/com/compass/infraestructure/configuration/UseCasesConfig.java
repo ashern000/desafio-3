@@ -2,6 +2,8 @@ package com.compass.infraestructure.configuration;
 
 import com.compass.application.product.create.CreateProductUseCase;
 import com.compass.application.product.create.DefaulCreateProductUseCase;
+import com.compass.application.product.delete.DefaultDeleteProductUseCase;
+import com.compass.application.product.delete.DeleteProductUseCase;
 import com.compass.application.product.retrieve.get.DefaultGetProductUseCase;
 import com.compass.application.product.retrieve.get.GetProductUseCase;
 import com.compass.application.product.retrieve.list.DefaultListProductUseCase;
@@ -46,6 +48,9 @@ public class UseCasesConfig {
     public ListProductUseCase listProductUseCase() {
         return new DefaultListProductUseCase(productGateway);
     }
+
+    @Bean
+    public DeleteProductUseCase deleteProductUseCase(){ return new DefaultDeleteProductUseCase(productGateway, saleGateway);}
 
     @Bean
     public CreateSaleUseCase createSaleUseCase() {

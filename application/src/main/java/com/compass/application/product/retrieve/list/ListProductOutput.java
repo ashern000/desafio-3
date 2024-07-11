@@ -5,15 +5,17 @@ import com.compass.domain.product.ProductID;
 
 import java.time.Instant;
 
-public record ListProductOutput(ProductID id,
-                                String name,
-                                String description,
-                                boolean isActive,
-                                double price,
-                                int quantity,
-                                Instant createdAt,
-                                Instant updatedAt,
-                                Instant deletedaAt) {
+public record ListProductOutput(
+        ProductID id,
+        String name,
+        String description,
+        boolean isActive,
+        double price,
+        int quantity,
+        Instant createdAt,
+        Instant updatedAt,
+        Instant deletedaAt
+) {
     public static ListProductOutput from(final Product aProduct) {
         return new ListProductOutput(
                 aProduct.getId(),

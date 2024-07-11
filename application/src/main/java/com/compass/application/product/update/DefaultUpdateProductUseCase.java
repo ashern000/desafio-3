@@ -8,13 +8,14 @@ import com.compass.domain.product.ProductID;
 import com.compass.domain.validation.handler.Notification;
 import io.vavr.API;
 import io.vavr.control.Either;
+
 import static io.vavr.API.Left;
 import static io.vavr.API.Try;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class DefaultUpdateProductUseCase extends UpdateProductUseCase{
+public class DefaultUpdateProductUseCase extends UpdateProductUseCase {
 
     private ProductGateway productGateway;
 
@@ -32,7 +33,9 @@ public class DefaultUpdateProductUseCase extends UpdateProductUseCase{
         final var quantity = aCommand.quantity();
 
         final var aProduct = this.productGateway.findById(anId).orElseThrow(notFound(anId));
+
         final var notification = Notification.create();
+
         aProduct.update(aName, aDescription, isActive, price, quantity).validate(notification);
 
         return notification.hasErrors() ? Left(notification) : update(aProduct);
@@ -41,11 +44,11 @@ public class DefaultUpdateProductUseCase extends UpdateProductUseCase{
     }
 
     private Either<Notification, UpdateProductOutput> update(final Product aProduct) {
-       return Try(()-> this.productGateway.update(aProduct)).toEither().bimap(Notification::create, UpdateProductOutput::from);
+        return Try(() -> this.productGateway.update(aProduct)).toEither().bimap(Notification::create, UpdateProductOutput::from);
     }
 
     private Supplier<DomainException> notFound(final ProductID anId) {
-            return () -> NotFoundException.with(Product.class, anId);
+        return () -> NotFoundException.with(Product.class, anId);
     }
 }
 
