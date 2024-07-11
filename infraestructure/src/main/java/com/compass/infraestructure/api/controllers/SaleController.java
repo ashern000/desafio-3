@@ -2,14 +2,21 @@ package com.compass.infraestructure.api.controllers;
 
 import com.compass.application.sale.create.CreateSaleCommand;
 import com.compass.application.sale.create.CreateSaleUseCase;
+import com.compass.application.sale.retrieve.list.defaultlist.ListSaleUseCase;
+import com.compass.application.sale.retrieve.list.filtersalesbydate.FilterSalesByDateCommand;
+import com.compass.application.sale.retrieve.list.filtersalesbydate.FilterSalesByDateUseCase;
+import com.compass.application.sale.retrieve.list.generatesalesreport.GenerateSalesReportCommand;
+import com.compass.application.sale.retrieve.list.generatesalesreport.GenerateSalesReportUseCase;
 import com.compass.domain.exceptions.NotificationException;
 import com.compass.infraestructure.api.SaleAPI;
 import com.compass.infraestructure.sale.models.CreateSaleApiInput;
+import com.compass.infraestructure.sale.models.GenerateSalesReportApiInput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +28,17 @@ public class SaleController implements SaleAPI {
 
     private CreateSaleUseCase createSaleUseCase;
 
-    public SaleController(final CreateSaleUseCase createSaleUseCase) {
+    private FilterSalesByDateUseCase filterSalesByDateUseCase;
+
+    private ListSaleUseCase listSaleUseCase;
+
+    private GenerateSalesReportUseCase generateSalesReportUseCase;
+
+    public SaleController(final CreateSaleUseCase createSaleUseCase, final FilterSalesByDateUseCase filterSalesByDateUseCase, final ListSaleUseCase listSaleUseCase, final GenerateSalesReportUseCase generateSalesReportUseCase) {
         this.createSaleUseCase = Objects.requireNonNull(createSaleUseCase);
+        this.filterSalesByDateUseCase = Objects.requireNonNull(filterSalesByDateUseCase);
+        this.listSaleUseCase = Objects.requireNonNull(listSaleUseCase);
+        this.generateSalesReportUseCase = Objects.requireNonNull(generateSalesReportUseCase);
     }
 
     public ResponseEntity<?> createSale(final CreateSaleApiInput input) {
@@ -46,6 +62,19 @@ public class SaleController implements SaleAPI {
 
     @Override
     public List<?> listSales() {
-        return List.of();
+        return this.listSaleUseCase.execute();
     }
+
+    @Override
+    public List<?> listSalesByDate(Instant startDate, Instant endDate) {
+        final var aCommand = FilterSalesByDateCommand.from(startDate,endDate);
+        return this.filterSalesByDateUseCase.execute(aCommand);
+    }
+
+    @Override
+    public List<?> generateSalesReport(GenerateSalesReportApiInput.ReportType reportType) {
+        final var aCommand = GenerateSalesReportCommand.from(reportType.toString());
+        return this.generateSalesReportUseCase.execute(aCommand);
+    }
+
 }

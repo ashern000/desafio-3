@@ -21,6 +21,9 @@ public class SaleJpaEntity implements Serializable {
     @Column(name = "id", nullable = false)
     private String id;
 
+    @Column(name = "total_price", nullable = false)
+    private double totalPrice;
+
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant createdAt;
 
@@ -34,10 +37,12 @@ public class SaleJpaEntity implements Serializable {
 
     private SaleJpaEntity(
             final String id,
+            final double totalPrice,
             final Instant createdAt,
             final Instant updatedAt
     ) {
         this.id = id;
+        this.totalPrice = totalPrice;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.products = new HashSet<>();
@@ -46,6 +51,7 @@ public class SaleJpaEntity implements Serializable {
     public static SaleJpaEntity from(final Sale aSale) {
         final var anEntity = new SaleJpaEntity(
                 aSale.getId().getValue(),
+                aSale.getTotalPrice(),
                 aSale.getCreatedAt(),
                 aSale.getUpdatedAt()
         );
@@ -54,7 +60,7 @@ public class SaleJpaEntity implements Serializable {
     }
 
     public Sale toDomain() {
-        return Sale.with(SaleID.from(getId()), getProductIDS(), getCreatedAt(), getUpdatedAt());
+        return Sale.with(SaleID.from(getId()), getProductIDS(),getTotalPrice(), getCreatedAt(), getUpdatedAt());
     }
 
     public List<ProductID> getProductIDS() {
@@ -99,6 +105,14 @@ public class SaleJpaEntity implements Serializable {
 
     public void setProducts(Set<SaleProductJpaEntity> products) {
         this.products = products;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
 

@@ -35,7 +35,14 @@ public class DefaultCreateSaleUseCase extends CreateSaleUseCase {
             throw new NotificationException("Could not create Aggregate Sale", notification);
         }
 
-        final var aSale = Sale.newSale(productSales.stream().map(CreateSaleCommand.ProductSale::getProductId).map(ProductID::from).toList());
+        double totalPrice = productSales.stream()
+                .mapToDouble(productSale -> {
+                    var product = productGateway.findById(ProductID.from(productSale.getProductId()));
+                    return product.map(value -> value.getPrice() * productSale.getQuantity()).orElse(0.0);
+                })
+                .sum();
+
+        final var aSale = Sale.newSale(productSales.stream().map(CreateSaleCommand.ProductSale::getProductId).map(ProductID::from).toList(), totalPrice);
         return CreateSaleOutput.from(this.saleGateway.create(aSale));
     }
 

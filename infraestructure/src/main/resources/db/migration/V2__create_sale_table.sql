@@ -1,5 +1,6 @@
 CREATE TABLE sales (
     id VARCHAR(36) NOT NULL PRIMARY KEY,
+    total_price FLOAT,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL
 );
