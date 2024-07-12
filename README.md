@@ -38,13 +38,8 @@ Este perfil é utilizado para testes e usa o banco de dados em memória H2.
    ```
    docker-compose up -d
    ```
-
-4. **Construa e execute a aplicação com Gradle**
-   ```
-   ./gradlew bootRun
-   ```
    
-5. **Acesse a documentação da API**
+4. **Acesse a documentação da API**
    Abra um navegador e acesse `http://localhost:8080/swagger-ui.html`
 
 ## Baixando o Projeto
