@@ -54,3 +54,20 @@ Você pode baixar o projeto diretamente do GitHub. Siga as instruções acima pa
 ## Documentação
 
 A documentação da API foi gerada com o OpenAPI e está disponível em `http://localhost:8090/swagger-ui.html` quando a aplicação está em execução.
+
+
+Claro, você pode adicionar a seguinte seção ao seu README para informar sobre o uso do Flyway:
+
+## Gerenciamento de Banco de Dados com Flyway
+
+Este projeto utiliza o **Flyway** para gerenciar o versionamento do banco de dados. O Flyway é uma ferramenta open-source que suporta a evolução do esquema de banco de dados. Ele permite que você aplique migrações de banco de dados de maneira controlada e ordenada.
+
+O Flyway é usado tanto no ambiente de produção quanto no ambiente de testes. Ele garante que o banco de dados esteja sempre sincronizado com o código, independentemente do ambiente em que a aplicação está sendo executada.
+
+Para executar as migrações do Flyway, você pode usar o seguinte comando do Gradle:
+
+```bash
+./gradlew flywayMigrate
+```
+
+Este comando irá aplicar todas as migrações pendentes. As migrações são scripts SQL localizados no diretório `src/main/resources/db/migration`.
