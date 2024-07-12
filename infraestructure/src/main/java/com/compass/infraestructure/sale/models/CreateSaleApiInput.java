@@ -10,7 +10,5 @@ public record CreateSaleApiInput(
     public static class ProductSale {
         public String productId;
         public int quantity;
-
-        // getters and setters
     }
 }

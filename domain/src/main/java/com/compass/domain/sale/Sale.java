@@ -101,6 +101,8 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
         return updatedAt;
     }
 
+    public void setProductIds(List<ProductID> products) {this.products = products; }
+
     public double getTotalPrice() { return totalPrice; }
 
     /**
@@ -109,9 +111,10 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
      * @param aProducts   The new list of products in the sale.
      * @return The current Sale instance.
      */
-    public Sale update(final List<ProductID> aProducts) {
+    public Sale update(final List<ProductID> aProducts, final double totalPrice) {
         this.products = aProducts;
         this.updatedAt = Instant.now();
+        this.totalPrice = totalPrice;
         return this;
     }
 

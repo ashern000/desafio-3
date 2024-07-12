@@ -3,6 +3,7 @@ package com.compass.infraestructure.api;
 import com.compass.infraestructure.product.models.CreateProductApiInput;
 import com.compass.infraestructure.sale.models.CreateSaleApiInput;
 import com.compass.infraestructure.sale.models.GenerateSalesReportApiInput;
+import com.compass.infraestructure.sale.models.UpdateSaleApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -69,4 +70,19 @@ public interface SaleAPI {
 
     @DeleteMapping()
     public ResponseEntity<?> deleteSale(@RequestParam("saleId") String saleId);
+
+    @PutMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Update an existing Sale")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable error"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
+    })
+    ResponseEntity<?> updateSale(@RequestBody UpdateSaleApiInput input);
+
 }
