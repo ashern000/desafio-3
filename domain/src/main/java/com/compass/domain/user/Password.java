@@ -33,7 +33,7 @@ public class Password extends ValueObject {
         }
     }
 
-    public String getPassword() {
+    public String getValue() {
         return password;
     }
 }
