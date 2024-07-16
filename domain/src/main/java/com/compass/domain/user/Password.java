@@ -15,7 +15,7 @@ public class Password extends ValueObject {
     );
 
     private Password(final String password) {
-        this.password = Objects.requireNonNull(password);
+        this.password = password;
     }
 
     public static Password newPassword(final String password) {

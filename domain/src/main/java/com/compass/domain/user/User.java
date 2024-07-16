@@ -61,6 +61,11 @@ public class User extends AggregateRoot<UserID> implements Cloneable {
         return user;
     }
 
+    public static User with(final UserID userID, final String aName, final String anEmail, final String aPassword, final boolean isActive, final UserRole role, final Instant createdAt, final Instant updatedAt, final Instant deletedAt ) {
+        return new User(userID, aName, Email.newEmail(anEmail),Password.with(aPassword),isActive, role, createdAt, updatedAt, deletedAt);
+    }
+
+
 
     public User active() {
         this.deletedAt = null;

@@ -3,9 +3,8 @@ package com.compass.application.user.login;
 import com.compass.application.UseCaseTest;
 import com.compass.application.adapters.CryptoAdapter;
 import com.compass.application.adapters.TokenAdapter;
-import com.compass.domain.user.Email;
-import com.compass.domain.user.User;
-import com.compass.domain.user.UserGateway;
+import com.compass.domain.exceptions.DomainException;
+import com.compass.domain.user.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -43,24 +42,26 @@ public class LoginUserUseCaseTest extends UseCaseTest {
         final var expectedPassword = "Password1@";
         final var expectedToken = "token";
 
-        final var aCommand = new LoginUserCommand(expectedEmail, expectedPassword);
+        final var aCommand = LoginUserCommand.with(expectedEmail, expectedPassword);
 
         User user = mock(User.class);
-        when(user.getId()).thenReturn("id");
+        final var mockUserID = UserID.from("id");
+        final var mockPassword = Password.with(expectedPassword);
+        when(user.getId()).thenReturn(mockUserID);
         when(user.getEmail()).thenReturn(Email.newEmail(expectedEmail));
-        when(user.getPassword()).thenReturn(expectedPassword);
+        when(user.getPassword()).thenReturn(mockPassword);
 
         when(userGateway.findByEmail(any())).thenReturn(Optional.of(user));
         when(cryptoAdapter.matches(anyString(), anyString())).thenReturn(true);
         when(tokenAdapter.generateToken(any(), any(), any())).thenReturn(expectedToken);
 
-        final var actualOutput = loginUserUseCase.execute(aCommand).get();
+        final var actualOutput = loginUserUseCase.execute(aCommand);
 
         Assertions.assertNotNull(actualOutput);
         Assertions.assertEquals("id", actualOutput.id());
         Assertions.assertEquals(expectedToken, actualOutput.token());
 
-        verify(userGateway, times(1)).findByEmail(any());
+        verify(userGateway, times(2)).findByEmail(any());
         verify(cryptoAdapter, times(1)).matches(anyString(), anyString());
         verify(tokenAdapter, times(1)).generateToken(any(), any(), any());
     }
@@ -70,43 +71,41 @@ public class LoginUserUseCaseTest extends UseCaseTest {
         final var expectedEmail = "test"; // fornecer um e-mail inválido
         final var expectedPassword = "Password1@";
         final var expectedErrorMessage = "Usuário ou senha inválidos";
-        final var expectedErrorCount = 1;
 
-        final var aCommand = new LoginUserCommand(expectedEmail, expectedPassword);
+        final var aCommand = LoginUserCommand.with(expectedEmail, expectedPassword);
 
         when(userGateway.findByEmail(any())).thenReturn(Optional.empty());
 
-        final var notification = loginUserUseCase.execute(aCommand).getLeft();
+        final var thrown = Assertions.assertThrows(
+                DomainException.class,
+                () -> loginUserUseCase.execute(aCommand)
+        );
 
-        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
+        Assertions.assertEquals(expectedErrorMessage, thrown.getMessage());
 
         verify(userGateway, times(1)).findByEmail(any());
         verify(cryptoAdapter, times(0)).matches(anyString(), anyString());
     }
 
+
     @Test
     public void givenAnInvalidPassword_whenCallsLoginUser_thenShouldReturnDomainException(){
-        final var expectedEmail = "test@example.com";
-        final var expectedPassword = "password"; // fornecer uma senha inválida
+        final var expectedEmail = "test@test.com"; // fornecer um e-mail inválido
+        final var expectedPassword = "password";
         final var expectedErrorMessage = "Usuário ou senha inválidos";
-        final var expectedErrorCount = 1;
 
-        final var aCommand = new LoginUserCommand(expectedEmail, expectedPassword);
+        final var aCommand = LoginUserCommand.with(expectedEmail, expectedPassword);
 
-        User user = mock(User.class);
-        when(user.getEmail()).thenReturn(Email.newEmail(expectedEmail));
-        when(user.getPassword()).thenReturn("Password1@");
+        when(userGateway.findByEmail(any())).thenReturn(Optional.empty());
 
-        when(userGateway.findByEmail(any())).thenReturn(Optional.of(user));
-        when(cryptoAdapter.matches(anyString(), anyString())).thenReturn(false);
+        final var thrown = Assertions.assertThrows(
+                DomainException.class,
+                () -> loginUserUseCase.execute(aCommand)
+        );
 
-        final var notification = loginUserUseCase.execute(aCommand).getLeft();
-
-        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
+        Assertions.assertEquals(expectedErrorMessage, thrown.getMessage());
 
         verify(userGateway, times(1)).findByEmail(any());
-        verify(cryptoAdapter, times(1)).matches(anyString(), anyString());
+        verify(cryptoAdapter, times(0)).matches(anyString(), anyString());
     }
 }

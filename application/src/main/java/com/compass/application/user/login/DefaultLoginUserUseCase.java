@@ -42,7 +42,7 @@ public class DefaultLoginUserUseCase extends LoginUserUseCase {
         Instant expiresAt = issuedAt.plusSeconds(600);  // Expira em 10 minutos
         String token = this.tokenService.generateToken(userPersistence, issuedAt, expiresAt);
 
-        return new LoginUserOutput(userPersistence.getId().getValue(), userPersistence.getEmail().getValue(), token);
+        return new LoginUserOutput(userPersistence.getId().getValue(),userPersistence.getId().getValue(), userPersistence.getEmail().getValue(), token);
 
     }
 }

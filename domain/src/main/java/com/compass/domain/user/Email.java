@@ -15,7 +15,7 @@ public class Email extends ValueObject {
     );
 
     private Email(final String email) {
-        this.email = Objects.requireNonNull(email);
+        this.email = email;
     }
 
     public static Email newEmail(final String email) {

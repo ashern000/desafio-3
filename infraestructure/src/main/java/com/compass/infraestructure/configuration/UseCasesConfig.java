@@ -1,5 +1,6 @@
 package com.compass.infraestructure.configuration;
 
+import com.compass.application.adapters.CryptoAdapter;
 import com.compass.application.product.create.CreateProductUseCase;
 import com.compass.application.product.create.DefaulCreateProductUseCase;
 import com.compass.application.product.delete.DefaultDeleteProductUseCase;
@@ -17,8 +18,10 @@ import com.compass.application.sale.retrieve.list.defaultlist.DefaultListSaleUse
 import com.compass.application.sale.retrieve.list.filtersalesbydate.DefaultFilterSalesByDateUseCase;
 import com.compass.application.sale.retrieve.list.generatesalesreport.DefaultGenerateSalesReportUseCase;
 import com.compass.application.sale.update.DefaultUpdateSaleUseCase;
+import com.compass.application.user.create.DefaultCreateUserUseCase;
 import com.compass.domain.product.ProductGateway;
 import com.compass.domain.sale.SaleGateway;
+import com.compass.domain.user.UserGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,9 +32,15 @@ public class UseCasesConfig {
 
     private final SaleGateway saleGateway;
 
-    public UseCasesConfig(final ProductGateway productGateway, final SaleGateway saleGateway) {
+    private final UserGateway userGateway;
+
+    private final CryptoAdapter cryptoAdapter;
+
+    public UseCasesConfig(final ProductGateway productGateway, final SaleGateway saleGateway, final UserGateway userGateway, final CryptoAdapter cryptoAdapter) {
         this.productGateway = productGateway;
         this.saleGateway = saleGateway;
+        this.userGateway = userGateway;
+        this.cryptoAdapter = cryptoAdapter;
     }
 
     @Bean
@@ -84,4 +93,7 @@ public class UseCasesConfig {
 
     @Bean
     public DefaultUpdateSaleUseCase updateSaleUseCase() {return new DefaultUpdateSaleUseCase(productGateway,saleGateway);}
+
+    @Bean
+    public DefaultCreateUserUseCase createUserUseCase() { return new DefaultCreateUserUseCase(userGateway, cryptoAdapter);}
 }
