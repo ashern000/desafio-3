@@ -1,8 +1,8 @@
 package com.compass.domain.user;
 
 import com.compass.domain.ValueObject;
-import com.compass.domain.exceptions.DomainException;
 import com.compass.domain.validation.Error;
+import com.compass.domain.validation.ValidationHandler;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -16,17 +16,20 @@ public class Email extends ValueObject {
 
     private Email(final String email) {
         this.email = Objects.requireNonNull(email);
-        this.validate();
     }
 
     public static Email newEmail(final String email) {
         return new Email(email);
     }
 
-    private void validate() {
+    public void validate(ValidationHandler handler) {
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         if (!matcher.matches()) {
-            throw DomainException.with(new Error("Email inválido"));
+            handler.append(new Error("Email invalido"));
         }
+    }
+
+    public String getValue() {
+        return email;
     }
 }

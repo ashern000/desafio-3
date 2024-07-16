@@ -1,9 +1,8 @@
 package com.compass.domain.user;
 
-
 import com.compass.domain.ValueObject;
-import com.compass.domain.exceptions.DomainException;
 import com.compass.domain.validation.Error;
+import com.compass.domain.validation.ValidationHandler;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -17,13 +16,25 @@ public class Password extends ValueObject {
 
     private Password(final String password) {
         this.password = Objects.requireNonNull(password);
-        this.validate();
     }
 
-    private void validate() {
+    public static Password newPassword(final String password) {
+        return new Password(password);
+    }
+
+    public static Password with(final String password) {
+        return new Password(password);
+    }
+
+    public void validate(ValidationHandler handler) {
         Matcher matcher = PASSWORD_PATTERN.matcher(password);
         if (!matcher.matches()) {
-            throw DomainException.with(new Error("Senha inválida"));
+            handler.append(new Error("Senha inválida"));
         }
     }
+
+    public String getPassword() {
+        return password;
+    }
 }
+

@@ -16,7 +16,7 @@ public class SaleTest {
 
         final var expectedProductIds = Arrays.asList(ProductID.unique(), ProductID.unique());
 
-        final Sale sale = Sale.newSale(expectedProductIds);
+        final Sale sale = Sale.newSale(expectedProductIds, 1);
 
         Assertions.assertNotNull(sale);
         Assertions.assertEquals(expectedProductIds, sale.getProductsIds());
@@ -30,7 +30,7 @@ public class SaleTest {
         final var expectedErrorMessage = "'productIds' should not be null or empty";
         final var expectedErrorCount = 1;
 
-        final Sale sale = Sale.newSale(expectedProductIds);
+        final Sale sale = Sale.newSale(expectedProductIds, 1);
 
         final var actualException = Assertions.assertThrows(DomainException.class, ()-> sale.validate(new ThrowsValidationHandler()));
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
@@ -43,7 +43,7 @@ public class SaleTest {
         final var expectedErrorMessage = "'productIds' should not be null or empty";
         final var expectedErrorCount = 1;
 
-        final Sale sale = Sale.newSale(expectedProductIds);
+        final Sale sale = Sale.newSale(expectedProductIds, 1);
 
         final var actualException = Assertions.assertThrows(DomainException.class, ()-> sale.validate(new ThrowsValidationHandler()));
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());

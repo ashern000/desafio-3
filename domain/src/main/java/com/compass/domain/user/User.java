@@ -1,7 +1,11 @@
 package com.compass.domain.user;
 
 import com.compass.domain.AggregateRoot;
+import com.compass.domain.exceptions.DomainException;
 import com.compass.domain.product.Product;
+import com.compass.domain.validation.Error;
+import com.compass.domain.validation.ValidationHandler;
+import com.compass.domain.validation.handler.Notification;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -31,16 +35,32 @@ public class User extends AggregateRoot<UserID> implements Cloneable {
         this.role = userRole;
         this.createdAt = Objects.requireNonNull(aCreated);
         this.updatedAt = Objects.requireNonNull(anUpdated);
-        this.deletedAt = Objects.requireNonNull(aDeletedAt);
+        this.deletedAt = aDeletedAt;
 
     }
 
-    public static User newUser(final String aName, final Email anEmail, final Password aPassword, final boolean isActive, final UserRole role) {
+    public void validate(ValidationHandler handler) {
+        if (this.name == null || this.name.trim().isEmpty()) {
+            handler.append(new Error("'name' should not be empty"));
+        }
+        this.email.validate(handler);
+        this.password.validate(handler);
+    }
+
+    public static User newUser(final String aName, final String anEmail, final String aPassword, final boolean isActive, final String roleUser) {
         final UserID anId = UserID.unique();
         final Instant now = Instant.now();
         final Instant deletedAt = isActive ? null : now;
-        return new User(anId,aName, anEmail, aPassword, isActive,role, now, now, deletedAt);
+        final UserRole role = UserRole.of(roleUser).orElseThrow(() -> new IllegalArgumentException("Role inválido"));
+
+        final Email email = Email.newEmail(anEmail);
+        final Password password = Password.newPassword(aPassword);
+
+        final User user = new User(anId, aName, email, password, isActive, role, now, now, deletedAt);
+
+        return user;
     }
+
 
     public User active() {
         this.deletedAt = null;
@@ -113,6 +133,10 @@ public class User extends AggregateRoot<UserID> implements Cloneable {
 
     public Password getPassword() {
         return password;
+    }
+
+    public void hashedPasswordDefine(final Password password) {
+        this.password = password;
     }
 
     public boolean isActive() {
