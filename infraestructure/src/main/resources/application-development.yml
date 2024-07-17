@@ -20,3 +20,6 @@ mysql:
   password: 123456
   schema: ecommerce
   url: localhost:3306
+
+jwt:
+  secret: mysecret

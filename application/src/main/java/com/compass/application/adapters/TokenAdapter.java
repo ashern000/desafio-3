@@ -9,4 +9,6 @@ public interface TokenAdapter {
     String generateToken(User user, Instant issuedAt, Instant expiresAt);
 
     boolean verifyToken(String token);
+
+    String getSubject(String token);
 }

@@ -4,7 +4,10 @@ import com.compass.application.product.create.CreateProductOutput;
 import com.compass.application.user.create.CreateUserCommand;
 import com.compass.application.user.create.CreateUserOutput;
 import com.compass.application.user.create.CreateUserUseCase;
+import com.compass.application.user.login.LoginUserCommand;
+import com.compass.application.user.login.LoginUserOutput;
 import com.compass.application.user.login.LoginUserUseCase;
+import com.compass.domain.exceptions.DomainException;
 import com.compass.domain.validation.handler.Notification;
 import com.compass.infraestructure.api.UserAPI;
 import com.compass.infraestructure.user.models.CreateUserApiInput;
@@ -23,9 +26,12 @@ public class UserController implements UserAPI {
 
     private CreateUserUseCase createUserUseCase;
 
+    private LoginUserUseCase loginUserUseCase;
 
-    public UserController(final CreateUserUseCase createUserUseCase) {
+
+    public UserController(final CreateUserUseCase createUserUseCase, final LoginUserUseCase loginUserUseCase) {
         this.createUserUseCase = Objects.requireNonNull(createUserUseCase);
+        this.loginUserUseCase = Objects.requireNonNull(loginUserUseCase);
 
     }
 
@@ -36,8 +42,6 @@ public class UserController implements UserAPI {
         final var aPassword = input.password();
         final var active = input.active() != null ? input.active() : true;
         final var aRole = input.role();
-
-        System.out.println(aRole);
 
         final var aCommand = CreateUserCommand.with(aName, anEmail, aPassword, active, aRole);
 
@@ -57,6 +61,20 @@ public class UserController implements UserAPI {
 
     @Override
     public ResponseEntity<?> loginUser(LoginUserApiInput input) {
-        return null;
+        final var anEmail = input.email();
+        final var aPassword = input.password();
+
+        final var aCommand = LoginUserCommand.with(anEmail, aPassword);
+
+        try {
+            final LoginUserOutput output = this.loginUserUseCase.execute(aCommand);
+            return ResponseEntity.ok(output);
+        } catch (DomainException e) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("code", HttpStatus.UNPROCESSABLE_ENTITY.value());
+            responseBody.put("errors", e.getErrors());
+            responseBody.put("status", HttpStatus.UNPROCESSABLE_ENTITY.name());
+            return ResponseEntity.unprocessableEntity().body(responseBody);
+        }
     }
 }

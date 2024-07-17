@@ -35,11 +35,11 @@ public class SaleMySQLGatewayTest {
 
     @Test
     public void givenAValidSale_whenCallsCreateSale_shouldPersistSale() {
-        final var aProduct = productGateway.create(Product.newProduct("Cafe", "Cafe premium", true, 10.1));
+        final var aProduct = productGateway.create(Product.newProduct("Cafe", "Cafe premium", true, 10.1, 10));
 
         final var expectedProducts = List.of(aProduct.getId());
 
-        final var aSale = Sale.newSale(expectedProducts);
+        final var aSale = Sale.newSale(expectedProducts, 10);
 
         Assertions.assertEquals(0, saleRepository.count());
 
@@ -49,7 +49,6 @@ public class SaleMySQLGatewayTest {
 
         Assertions.assertEquals(aSale.getId().getValue(), actualSale.getId().getValue());
         Assertions.assertEquals(expectedProducts, actualSale.getProductsIds());
-        System.out.println(actualSale);
         Assertions.assertEquals(aSale.getCreatedAt(), actualSale.getCreatedAt());
         Assertions.assertEquals(aSale.getUpdatedAt(), actualSale.getUpdatedAt());
 
@@ -64,13 +63,13 @@ public class SaleMySQLGatewayTest {
     @Test
     public void givenAProductInSales_whenCallsFindByProductId_shouldReturnSales() {
         // Cria um produto
-        Product createdProduct = productGateway.create(Product.newProduct("Cafe", "Cafe premium", true, 101.1));
+        Product createdProduct = productGateway.create(Product.newProduct("Cafe", "Cafe premium", true, 101.1, 10));
         ProductID productId = createdProduct.getId();
         List<ProductID> expectedProducts = List.of(productId);
 
         // Cria duas vendas com o produto
-        Sale sale1 = Sale.newSale(expectedProducts);
-        Sale sale2 = Sale.newSale(expectedProducts);
+        Sale sale1 = Sale.newSale(expectedProducts, 10);
+        Sale sale2 = Sale.newSale(expectedProducts, 10);
         saleGateway.create(sale1);
         saleGateway.create(sale2);
 
@@ -85,20 +84,18 @@ public class SaleMySQLGatewayTest {
     @Test
     public void givenAProductInSales_whenCallsFindAllSalesByProductId_shouldReturnSales() {
         // Cria um produto
-        Product createdProduct = productGateway.create(Product.newProduct("Cafe", "Cafe premium", true, 101.1));
+        Product createdProduct = productGateway.create(Product.newProduct("Cafe", "Cafe premium", true, 101.1, 10));
         ProductID productId = createdProduct.getId();
         List<ProductID> expectedProducts = List.of(productId);
 
         // Cria duas vendas com o produto
-        Sale sale1 = Sale.newSale(expectedProducts);
-        Sale sale2 = Sale.newSale(expectedProducts);
+        Sale sale1 = Sale.newSale(expectedProducts, 10);
+        Sale sale2 = Sale.newSale(expectedProducts, 10);
         saleGateway.create(sale1);
         saleGateway.create(sale2);
 
         // Verifica as vendas que contêm o produto
         List<Sale> sales = saleGateway.findAllSalesByProductId(productId);
-
-        System.out.println(sales);
 
         // Asserções
         Assertions.assertEquals(2, sales.size(), "Deveria retornar duas vendas");

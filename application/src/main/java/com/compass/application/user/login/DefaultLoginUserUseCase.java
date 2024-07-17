@@ -28,7 +28,7 @@ public class DefaultLoginUserUseCase extends LoginUserUseCase {
         final var aPassword = aCommand.password();
 
         if (!this.userGateway.findByEmail(anEmail).isPresent()) {
-            throw DomainException.with(new Error("Usuário ou senha inválidos"));
+            throw DomainException.with(new Error("Usuário ou senha inválidos email"));
         }
 
         User userPersistence = this.userGateway.findByEmail(anEmail).orElseThrow();
@@ -39,7 +39,7 @@ public class DefaultLoginUserUseCase extends LoginUserUseCase {
 
 // Gere o token
         Instant issuedAt = Instant.now();
-        Instant expiresAt = issuedAt.plusSeconds(600);  // Expira em 10 minutos
+        Instant expiresAt = issuedAt.plusSeconds(1200);
         String token = this.tokenService.generateToken(userPersistence, issuedAt, expiresAt);
 
         return new LoginUserOutput(userPersistence.getId().getValue(),userPersistence.getId().getValue(), userPersistence.getEmail().getValue(), token);

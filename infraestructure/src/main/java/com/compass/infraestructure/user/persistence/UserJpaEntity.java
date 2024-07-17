@@ -7,13 +7,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 
-@Entity
-@Table(name = "user")
-public class UserJpaEntity implements Serializable {
+@Entity(name = "User")
+@Table(name = "users_e")
+public class UserJpaEntity implements Serializable, UserDetails {
 
     @Id
     private String id;
@@ -71,7 +76,7 @@ public class UserJpaEntity implements Serializable {
                 aUser.getEmail().getValue(),
                 aUser.getPassword().getValue(),
                 aUser.isActive(),
-                aUser.getRole().name(),
+                aUser.getRole().getRole(),
                 aUser.getCreatedAt(),
                 aUser.getUpdatedAt(),
                 aUser.getDeletedAt()
@@ -116,8 +121,19 @@ public class UserJpaEntity implements Serializable {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == UserRole.ADMIN_ROLE.getRole()) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return getName();
     }
 
     public void setPassword(String password) {

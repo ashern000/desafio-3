@@ -33,14 +33,12 @@ public class DefaultCreateUserUseCase extends CreateUserUseCase{
         actualUser.validate(notification);
         final var hashedPassword = crypto.encode(aPassword);
         actualUser.hashedPasswordDefine(Password.with(hashedPassword));
-
         return notification.hasErrors() ? Left(notification) : create(actualUser);
 
     }
 
     private Either<Notification, CreateUserOutput> create(User actualUser) {
         return Try(() -> this.userGateway.create(actualUser))
-                .toEither()
-                .mapLeft(Notification::create).map(CreateUserOutput::from);
+                .toEither().bimap(Notification::create, CreateUserOutput::from);
     }
 }

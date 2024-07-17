@@ -98,15 +98,12 @@ public class SaleController implements SaleAPI  {
     @CacheEvict(value = "sales", allEntries = true)
     @Override
     public ResponseEntity<?> deleteSale(String saleId) {
-        System.out.println(saleId);
         try {
             final var aCommand = DeleteSaleCommand.with(saleId);
             return ResponseEntity.ok(this.deleteSaleUseCase.execute(aCommand));
         } catch (NotificationException e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while trying to delete the sale.");
         }
     }
