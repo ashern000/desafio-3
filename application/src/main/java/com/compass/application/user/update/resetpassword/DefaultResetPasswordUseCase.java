@@ -69,7 +69,26 @@ public class DefaultResetPasswordUseCase extends ResetPasswordUseCase{
         final var token = tokenAdapter.generateToken(actualUser, issuedAt, expiresAt);
 
         if(!notification.hasErrors()) {
-            email.send(actualUser.getEmail(), "Your token for login in application", token);
+            email.send(actualUser.getEmail(),  """
+                    Dear User,
+                                        
+                    We hope this message finds you well.
+                                        
+                    We're writing to let you know that your password reset request was successful. Your account security is our top priority!
+                                        
+                    Here is your temporary token which allows you to log in to your account:
+                                        
+                    **Your temporary login token: TOKEN**
+                                        
+                    Please use this token to log in to your Compass E-commerce account. Once you're logged in, we strongly recommend that you update your password to something only you would know.
+                                        
+                    Remember, Compass E-commerce staff will never ask you for your password, so please keep it safe!
+                                        
+                    If you didn't request this password reset, please let us know immediately.
+                                        
+                    Thank you for being a valued member of our community!
+                    
+                    """, token);
         }
 
         return notification.hasErrors() ? Left(notification) : reset(actualUser);
