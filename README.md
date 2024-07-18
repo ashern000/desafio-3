@@ -50,9 +50,6 @@ Você pode baixar o projeto diretamente do GitHub. Siga as instruções acima pa
 
 A documentação da API foi gerada com o OpenAPI e está disponível em `http://localhost:8090/swagger-ui.html` quando a aplicação está em execução.
 
-
-Claro, você pode adicionar a seguinte seção ao seu README para informar sobre o uso do Flyway:
-
 ## Gerenciamento de Banco de Dados com Flyway
 
 Este projeto utiliza o **Flyway** para gerenciar o versionamento do banco de dados. O Flyway é uma ferramenta open-source que suporta a evolução do esquema de banco de dados. Ele permite que você aplique migrações de banco de dados de maneira controlada e ordenada.
@@ -66,3 +63,19 @@ Para executar as migrações do Flyway, você pode usar o seguinte comando do Gr
 ```
 
 Este comando irá aplicar todas as migrações pendentes. As migrações são scripts SQL localizados no diretório `src/main/resources/db/migration`.
+
+## Autenticação e Autorização
+Este projeto implementa um sistema robusto de autenticação e autorização para garantir a segurança dos dados e operações.
+
+### Autenticação
+A autenticação é realizada através de um sistema de tokens. Quando um usuário se registra ou faz login, um token é gerado e enviado para o usuário. Este token deve ser incluído no cabeçalho de todas as solicitações subsequentes para autenticar o usuário.
+
+### Autorização
+A autorização é baseada em papéis de usuário. Atualmente, existem dois papéis: ADMIN e USER.
+
+ADMIN: Os usuários com o papel ADMIN têm permissões completas para realizar qualquer operação, incluindo operações de gerenciamento como adicionar, atualizar e excluir produtos.
+
+USER: Os usuários com o papel USER têm permissões limitadas. Eles podem visualizar produtos e realizar operações relacionadas ao carrinho de compras e pedidos, mas não podem realizar operações de gerenciamento.
+A autorização é realizada verificando o papel do usuário autenticado antes de realizar uma operação. Se o usuário não tiver permissão para realizar a operação, a solicitação será negada.
+
+Isso garante que apenas usuários autorizados possam realizar operações sensíveis, melhorando a segurança da aplicação
