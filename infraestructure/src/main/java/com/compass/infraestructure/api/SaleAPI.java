@@ -30,7 +30,7 @@ public interface SaleAPI {
             @ApiResponse(responseCode = "422", description = "Unprocessable error"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
-    ResponseEntity<?> createSale(@RequestBody CreateSaleApiInput input);
+    ResponseEntity<?> createSale(@RequestHeader(value="Authorization") String token,@RequestBody CreateSaleApiInput input);
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -53,7 +53,7 @@ public interface SaleAPI {
             @ApiResponse(responseCode = "422", description = "Unprocessable error"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
-    List<?> listSalesByDate(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+    List<?> listSalesByDate(@RequestHeader(value="Authorization") String token,@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
                             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate);
 
 
@@ -64,12 +64,12 @@ public interface SaleAPI {
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
     @GetMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<?> generateSalesReport(
+    public List<?> generateSalesReport(@RequestHeader(value="Authorization") String token,
             @RequestParam("reportType") GenerateSalesReportApiInput.ReportType reportType
     );
 
     @DeleteMapping()
-    public ResponseEntity<?> deleteSale(@RequestParam("saleId") String saleId);
+    public ResponseEntity<?> deleteSale(@RequestHeader(value="Authorization") String token,@RequestParam("saleId") String saleId);
 
     @PutMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -83,6 +83,6 @@ public interface SaleAPI {
             @ApiResponse(responseCode = "422", description = "Unprocessable error"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
-    ResponseEntity<?> updateSale(@RequestBody UpdateSaleApiInput input);
+    ResponseEntity<?> updateSale(@RequestHeader(value="Authorization") String token, @RequestBody UpdateSaleApiInput input);
 
 }

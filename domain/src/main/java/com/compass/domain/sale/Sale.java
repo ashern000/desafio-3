@@ -3,6 +3,7 @@ package com.compass.domain.sale;
 import com.compass.domain.AggregateRoot;
 import com.compass.domain.product.Product;
 import com.compass.domain.product.ProductID;
+import com.compass.domain.user.UserID;
 import com.compass.domain.validation.ValidationHandler;
 
 import java.time.Instant;
@@ -18,6 +19,7 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
 
     // Fields representing sale properties
     private List<ProductID> products;
+    private UserID userID;
     private double totalPrice;
     private Instant createdAt;
     private Instant updatedAt;
@@ -32,10 +34,12 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
      */
     private Sale(final SaleID anId,
                  final List<ProductID> aProducts,
+                 final UserID userID,
                  final double totalPrice,
                  final Instant aCreatedAt,
                  final Instant aUpdatedAt) {
         super(anId);
+        this.userID = userID;
         this.products = aProducts;
         this.totalPrice = totalPrice;
         this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' should not be null");
@@ -48,10 +52,10 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
      * @param aProducts   The list of products in the sale.
      * @return A new Sale instance.
      */
-    public static Sale newSale(final List<ProductID> aProducts, final double totalPrice) {
+    public static Sale newSale(final List<ProductID> aProducts, UserID anUser, final double totalPrice) {
         final var anId = SaleID.unique();
         final var now = Instant.now();
-        return new Sale(anId, aProducts,totalPrice, now, now);
+        return new Sale(anId,aProducts,anUser,totalPrice, now, now);
     }
 
     /**
@@ -63,9 +67,9 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
      * @param updatedAt   The timestamp when the sale was last updated.
      * @return A Sale instance.
      */
-    public static Sale with(final SaleID anId, final List<ProductID> aProducts,final double
+    public static Sale with(final SaleID anId, final List<ProductID> aProducts,final UserID anUser,final double
                             totalPrice,final Instant createdAt, final Instant updatedAt) {
-        return new Sale(anId, aProducts,totalPrice, createdAt, updatedAt);
+        return new Sale(anId, aProducts,anUser,totalPrice, createdAt, updatedAt);
     }
 
     /**
@@ -75,7 +79,7 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
      * @return A new Sale instance.
      */
     public static Sale with(final Sale aSale) {
-        return with(aSale.getId(), aSale.getProductsIds(),aSale.getTotalPrice(), aSale.getCreatedAt(), aSale.getUpdatedAt());
+        return with(aSale.getId(), aSale.getProductsIds(),aSale.getUserId(),aSale.getTotalPrice(), aSale.getCreatedAt(), aSale.getUpdatedAt());
     }
 
     /**
@@ -95,6 +99,10 @@ public class Sale extends AggregateRoot<SaleID> implements Cloneable {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public UserID getUserId() {
+        return userID;
     }
 
     public Instant getUpdatedAt() {

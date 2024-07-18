@@ -28,12 +28,18 @@ public interface ProductAPI {
             @ApiResponse(responseCode = "422", description = "Unprocessable error"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
-    ResponseEntity<?> createProduct(@RequestBody CreateProductApiInput input);
+    ResponseEntity<?> createProduct(@RequestHeader(value="Authorization") String token,@RequestBody CreateProductApiInput input);
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    List<?> listProducts();
+    @Operation(summary = "List a Products")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "List successfully"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable error"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
+    })
+    List<?> listProducts(@RequestHeader(value="Authorization") String token);
 
     @PutMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -45,7 +51,7 @@ public interface ProductAPI {
             @ApiResponse(responseCode = "422", description = "Unprocessable error"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
-    ResponseEntity<?>  updateProduct(@RequestBody UpdateProductApiInput input);
+    ResponseEntity<?>  updateProduct(@RequestHeader(value="Authorization") String token,@RequestBody UpdateProductApiInput input);
 
     @DeleteMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -58,5 +64,5 @@ public interface ProductAPI {
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
 
-    ResponseEntity<?> deleteProduct(@RequestBody DeleteProductApiInput input);
+    ResponseEntity<?> deleteProduct(@RequestHeader(value="Authorization") String token, @RequestBody DeleteProductApiInput input);
 }

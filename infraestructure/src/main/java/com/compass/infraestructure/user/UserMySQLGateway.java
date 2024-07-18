@@ -34,7 +34,7 @@ public class UserMySQLGateway implements UserGateway {
     }
 
     @Override
-    public void update(User user) {
-
+    public User update(User user) {
+        return this.userRepository.save(UserJpaEntity.from(user)).toDomain();
     }
 }

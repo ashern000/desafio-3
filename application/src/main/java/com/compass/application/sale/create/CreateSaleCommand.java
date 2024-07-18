@@ -1,11 +1,13 @@
 package com.compass.application.sale.create;
 
+import com.compass.domain.user.UserID;
+
 import java.util.List;
 
-public record CreateSaleCommand(List<ProductSale> productSales) {
+public record CreateSaleCommand(List<ProductSale> productSales, String token) {
 
-    public static CreateSaleCommand with(final List<ProductSale> productSales) {
-        return new CreateSaleCommand(productSales);
+    public static CreateSaleCommand with(final List<ProductSale> productSales, final String token) {
+        return new CreateSaleCommand(productSales, token);
     }
 
 

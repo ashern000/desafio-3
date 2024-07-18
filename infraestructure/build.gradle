@@ -32,6 +32,7 @@ dependencies {
     implementation ('org.springframework.boot:spring-boot-starter-web:3.3.1') {
         exclude module: 'spring-boot-starter-tomcat'
     }
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.1'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.3.1'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
     implementation 'io.vavr:vavr:0.10.4'

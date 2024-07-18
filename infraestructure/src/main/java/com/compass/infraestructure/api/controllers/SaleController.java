@@ -56,15 +56,16 @@ public class SaleController implements SaleAPI  {
     }
 
     @CacheEvict(value = "sales", allEntries = true)
-    public ResponseEntity<?> createSale(final CreateSaleApiInput input) {
+    public ResponseEntity<?> createSale(String token,final CreateSaleApiInput input) {
         final var productSales = input.productSales();
 
         final var aCommand = CreateSaleCommand.with(productSales.stream().map(inputValues ->
                 new CreateSaleCommand.ProductSale(inputValues.productId, inputValues.quantity)
-                ).toList());
+                ).toList(), token);
 
         try {
             final var createSaleOutput = this.createSaleUseCase.execute(aCommand);
+            System.out.println(createSaleOutput.userId());
             return ResponseEntity.created(URI.create("/sales/" + createSaleOutput.id())).body(createSaleOutput);
         } catch (NotificationException e) {
             Map<String, Object> responseBody = new HashMap<>();
@@ -83,21 +84,21 @@ public class SaleController implements SaleAPI  {
 
     @Cacheable(value = "sales")
     @Override
-    public List<?> listSalesByDate(Instant startDate, Instant endDate) {
+    public List<?> listSalesByDate(String token, Instant startDate, Instant endDate) {
         final var aCommand = FilterSalesByDateCommand.from(startDate,endDate);
         return this.filterSalesByDateUseCase.execute(aCommand);
     }
 
     @Cacheable(value = "sales")
     @Override
-    public List<?> generateSalesReport(GenerateSalesReportApiInput.ReportType reportType) {
+    public List<?> generateSalesReport(String token,GenerateSalesReportApiInput.ReportType reportType) {
         final var aCommand = GenerateSalesReportCommand.from(reportType.toString());
         return this.generateSalesReportUseCase.execute(aCommand);
     }
 
     @CacheEvict(value = "sales", allEntries = true)
     @Override
-    public ResponseEntity<?> deleteSale(String saleId) {
+    public ResponseEntity<?> deleteSale(String token,String saleId) {
         try {
             final var aCommand = DeleteSaleCommand.with(saleId);
             return ResponseEntity.ok(this.deleteSaleUseCase.execute(aCommand));
@@ -109,7 +110,7 @@ public class SaleController implements SaleAPI  {
     }
 
     @Override
-    public ResponseEntity<?> updateSale(UpdateSaleApiInput input) {
+    public ResponseEntity<?> updateSale(String token,UpdateSaleApiInput input) {
         try {
             final var aCommand = UpdateSaleCommand.with(input.saleId(), input.productSales().stream().map(inputValues -> new UpdateSaleCommand.ProductSale(inputValues.productId, inputValues.quantity)).toList());
             return ResponseEntity.ok(this.updateSaleUseCase.execute(aCommand));

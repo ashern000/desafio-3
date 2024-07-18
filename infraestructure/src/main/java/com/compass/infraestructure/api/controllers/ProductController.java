@@ -52,7 +52,7 @@ public class ProductController implements ProductAPI {
 
     @Override
     @CacheEvict(value = "products", allEntries = true)
-    public ResponseEntity<?> createProduct(final CreateProductApiInput input) {
+    public ResponseEntity<?> createProduct(String token,final CreateProductApiInput input) {
         final var name = input.name();
         final var description = input.description();
         final var active = input.active() != null ? input.active() : true;
@@ -77,12 +77,12 @@ public class ProductController implements ProductAPI {
 
     @Override
     @Cacheable(value = "products")
-    public List<?> listProducts() {
+    public List<?> listProducts(String token) {
         return this.listProductUseCase.execute();
     }
 
     @Override
-    public ResponseEntity<?> updateProduct(UpdateProductApiInput input) {
+    public ResponseEntity<?> updateProduct(String token,UpdateProductApiInput input) {
         final var id = input.id();
         final var name = input.name();
         final var description = input.description();
@@ -106,7 +106,7 @@ public class ProductController implements ProductAPI {
     }
 
     @Override
-    public ResponseEntity<?> deleteProduct(DeleteProductApiInput input) {
+    public ResponseEntity<?> deleteProduct(String token, DeleteProductApiInput input) {
         final var id = input.id();
 
         final Function<Notification, ResponseEntity<?>> onError = notification -> {

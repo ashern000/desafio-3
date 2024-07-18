@@ -1,6 +1,7 @@
 package com.compass.infraestructure.configuration;
 
 import com.compass.application.adapters.CryptoAdapter;
+import com.compass.application.adapters.EmailAdapter;
 import com.compass.application.adapters.TokenAdapter;
 import com.compass.application.product.create.CreateProductUseCase;
 import com.compass.application.product.create.DefaulCreateProductUseCase;
@@ -21,6 +22,7 @@ import com.compass.application.sale.retrieve.list.generatesalesreport.DefaultGen
 import com.compass.application.sale.update.DefaultUpdateSaleUseCase;
 import com.compass.application.user.create.DefaultCreateUserUseCase;
 import com.compass.application.user.login.DefaultLoginUserUseCase;
+import com.compass.application.user.update.resetpassword.DefaultResetPasswordUseCase;
 import com.compass.domain.product.ProductGateway;
 import com.compass.domain.sale.SaleGateway;
 import com.compass.domain.user.UserGateway;
@@ -40,12 +42,15 @@ public class UseCasesConfig {
 
     private final TokenAdapter tokenAdapter;
 
-    public UseCasesConfig(final ProductGateway productGateway, final SaleGateway saleGateway, final UserGateway userGateway, final CryptoAdapter cryptoAdapter, final TokenAdapter tokenAdapter) {
+    private final EmailAdapter emailAdapter;
+
+    public UseCasesConfig(final ProductGateway productGateway, final SaleGateway saleGateway, final UserGateway userGateway, final CryptoAdapter cryptoAdapter, final TokenAdapter tokenAdapter, final EmailAdapter emailAdapter) {
         this.productGateway = productGateway;
         this.saleGateway = saleGateway;
         this.userGateway = userGateway;
         this.cryptoAdapter = cryptoAdapter;
         this.tokenAdapter = tokenAdapter;
+        this.emailAdapter = emailAdapter;
     }
 
     @Bean
@@ -73,7 +78,7 @@ public class UseCasesConfig {
 
     @Bean
     public CreateSaleUseCase createSaleUseCase() {
-        return new DefaultCreateSaleUseCase(productGateway,saleGateway);
+        return new DefaultCreateSaleUseCase(productGateway,saleGateway,tokenAdapter, userGateway);
     }
 
     @Bean
@@ -104,4 +109,7 @@ public class UseCasesConfig {
 
     @Bean
     public DefaultLoginUserUseCase loginUserUseCase() { return new DefaultLoginUserUseCase(userGateway, cryptoAdapter, tokenAdapter);}
+
+    @Bean
+    public DefaultResetPasswordUseCase resetPasswordUseCase() {return new DefaultResetPasswordUseCase(emailAdapter, userGateway, tokenAdapter, cryptoAdapter);}
 }

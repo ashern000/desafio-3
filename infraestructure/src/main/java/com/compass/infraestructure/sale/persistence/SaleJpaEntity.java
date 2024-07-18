@@ -4,6 +4,7 @@ import com.compass.domain.product.Product;
 import com.compass.domain.product.ProductID;
 import com.compass.domain.sale.Sale;
 import com.compass.domain.sale.SaleID;
+import com.compass.domain.user.UserID;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -24,6 +25,9 @@ public class SaleJpaEntity implements Serializable {
     @Column(name = "total_price", nullable = false)
     private double totalPrice;
 
+    @Column(name = "user_id", nullable = false)
+    private String userId;
+
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant createdAt;
 
@@ -38,11 +42,13 @@ public class SaleJpaEntity implements Serializable {
     private SaleJpaEntity(
             final String id,
             final double totalPrice,
+            final String userId,
             final Instant createdAt,
             final Instant updatedAt
     ) {
         this.id = id;
         this.totalPrice = totalPrice;
+        this.userId = userId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.products = new HashSet<>();
@@ -52,6 +58,7 @@ public class SaleJpaEntity implements Serializable {
         final var anEntity = new SaleJpaEntity(
                 aSale.getId().getValue(),
                 aSale.getTotalPrice(),
+                aSale.getUserId().getValue(),
                 aSale.getCreatedAt(),
                 aSale.getUpdatedAt()
         );
@@ -60,7 +67,7 @@ public class SaleJpaEntity implements Serializable {
     }
 
     public Sale toDomain() {
-        return Sale.with(SaleID.from(getId()), getProductIDS(),getTotalPrice(), getCreatedAt(), getUpdatedAt());
+        return Sale.with(SaleID.from(getId()), getProductIDS(), UserID.from(getUserId()),getTotalPrice(), getCreatedAt(), getUpdatedAt());
     }
 
     public List<ProductID> getProductIDS() {
@@ -81,6 +88,12 @@ public class SaleJpaEntity implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserId() {return userId;}
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Instant getCreatedAt() {
